@@ -20,6 +20,88 @@ const INGREDIENTES_PADRAO = [
   {nome:'Torta de girassol', tipo:'Concentrado', custo:2.7, ms:90, pb:28, ndt:76, ca:0.38, p:1.2, pdr:65},
   {nome:'Grão de sorgo', tipo:'Concentrado', custo:1.5, ms:89, pb:10, ndt:85, ca:0.07, p:0.34, pdr:60},
   {nome:'Mineral Ovinos', tipo:'Concentrado', custo:4.0, ms:100, pb:0, ndt:0, ca:21, p:6, pdr:0},
+
+   // Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
+
+{nome:'Arroz farelo desengordurado', tipo:'Concentrado', custo:1.2, ms:88.2, pb:16.8, ndt:24.9, ca:0.09, p:1.8, pdr:50}, // PDR estimado
+{nome:'Arroz farelo desfinitizado', tipo:'Concentrado', custo:1.2, ms:90.8, pb:18.0, ndt:0, ca:0.31, p:2.04, pdr:50}, // PDR estimado
+{nome:'Arroz farelo integral', tipo:'Concentrado', custo:1.2, ms:88.9, pb:13.4, ndt:87.5, ca:0.11, p:1.73, pdr:50}, // PDR estimado
+{nome:'Milho grão/fubá', tipo:'Concentrado', custo:1.6, ms:88, pb:9, ndt:87.7, ca:0.03, p:0.26, pdr:55}, // PDR estimado
+{nome:'Farelo de soja', tipo:'Concentrado', custo:2.0, ms:87, pb:45, ndt:73, ca:0.3, p:0.61, pdr:78.5}, // PDR real
+{nome:'Farelo de algodão 38 PB', tipo:'Concentrado', custo:1.8, ms:89.7, pb:38, ndt:65.6, ca:0.24, p:0.97, pdr:76}, // PDR real
+{nome:'Farelo de amendoim', tipo:'Concentrado', custo:2.1, ms:89.4, pb:56, ndt:89.5, ca:0.18, p:0.62, pdr:27.8}, // PDR real
+{nome:'Farelo de girassol', tipo:'Concentrado', custo:1.8, ms:90.2, pb:31.4, ndt:71.1, ca:0.3, p:0.9, pdr:45.6}, // PDR real
+{nome:'Milho glúten farelo', tipo:'Concentrado', custo:2.4, ms:60, pb:90.6, ndt:83.9, ca:0.05, p:0.44, pdr:83}, // PDR real
+{nome:'Milho silagem grão úmido', tipo:'Volumoso', custo:0.7, ms:66.7, pb:9.2, ndt:88.2, ca:0.03, p:0.25, pdr:25}, // PDR real
+{nome:'Silagem de capim-elefante', tipo:'Volumoso', custo:0.4, ms:27.5, pb:5.5, ndt:50, ca:0.31, p:0.2, pdr:36}, // PDR real
+{nome:'Cana-de-açúcar', tipo:'Volumoso', custo:0.3, ms:28.9, pb:2.8, ndt:64.5, ca:0.24, p:0.08, pdr:41}, // PDR real
+{nome:'Alfafa feno', tipo:'Volumoso', custo:2.0, ms:85.8, pb:18.7, ndt:66.4, ca:1.17, p:0.33, pdr:40}, // PDR estimado
+{nome:'Aveia feno', tipo:'Volumoso', custo:1.5, ms:90, pb:10, ndt:54, ca:0.4, p:0.27, pdr:40}, // PDR estimado
+{nome:'Trevo feno', tipo:'Volumoso', custo:1.8, ms:89, pb:16, ndt:57, ca:1.73, p:0.24, pdr:40}, // PDR estimado
+{nome:'Sorgo grão', tipo:'Concentrado', custo:1.4, ms:88, pb:9.3, ndt:84.4, ca:0.07, p:0.29, pdr:50}, // PDR estimado
+{nome:'Polpa cítrica', tipo:'Concentrado', custo:1.3, ms:88.4, pb:6.9, ndt:78.3, ca:1.8, p:0.13, pdr:50}, // PDR estimado
+{nome:'Capim tifton 85 feno', tipo:'Volumoso', custo:1.4, ms:88, pb:9.9, ndt:57.7, ca:0.33, p:0.27, pdr:40}, // PDR estimado
+{nome:'Capim mombaça', tipo:'Volumoso', custo:1.2, ms:27, pb:11, ndt:53, ca:0.74, p:0.19, pdr:40}, // PDR estimado
+{nome:'Capim elefante', tipo:'Volumoso', custo:1.1, ms:21.7, pb:7, ndt:50, ca:0.36, p:0.23, pdr:40}, // PDR estimado
+{nome:'Aveia grão', tipo:'Concentrado', custo:1.6, ms:90.4, pb:14.6, ndt:83.3, ca:0.13, p:0.35, pdr:50}, // PDR estimado
+{nome:'Cevada grão', tipo:'Concentrado', custo:1.5, ms:89.9, pb:12.4, ndt:76.8, ca:0.05, p:0.37, pdr:50}, // PDR estimado
+{nome:'Trigo farelo', tipo:'Concentrado', custo:1.6, ms:87.6, pb:16.7, ndt:77.3, ca:0.17, p:1.01, pdr:50}, // PDR estimado
+{nome:'Cacau farelo', tipo:'Concentrado', custo:2.5, ms:88.8, pb:15.9, ndt:64.5, ca:0.74, p:0.5, pdr:50}, // PDR estimado
+{nome:'Capim elefante colmo', tipo:'Volumoso', custo:0.7, ms:22, pb:5.8, ndt:55.9, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim coast cross feno', tipo:'Volumoso', custo:1.2, ms:87, pb:10.5, ndt:53, ca:0.27, p:0.38, pdr:40}, // PDR estimado
+{nome:'Capim massai (61-90 dias)', tipo:'Volumoso', custo:1.1, ms:29.5, pb:8, ndt:51.6, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim tanzânia', tipo:'Volumoso', custo:1.3, ms:23.4, pb:9.5, ndt:51, ca:0.59, p:0.14, pdr:40}, // PDR estimado
+{nome:'Leucena feno', tipo:'Volumoso', custo:2.0, ms:91, pb:21, ndt:55, ca:1.18, p:0.29, pdr:40}, // PDR estimado
+{nome:'Maniçoba feno', tipo:'Volumoso', custo:1.5, ms:86, pb:12, ndt:56.2, ca:0, p:0, pdr:40}, // PDR estimado
+
+// Tabela 28 - Concentrados proteicos
+
+  { nome: 'Algodão caroço', tipo: 'Concentrado', custo: 1.87, ms: 90.6, pb: 23.1, ndt: 88.2, ca: 0.27, p: 0.75, pdr: 21.6 },
+  { nome: 'Algodão farelo 28', tipo: 'Concentrado', custo: 1.87, ms: 89.8, pb: 28, ndt: 68.1, ca: 0.26, p: 0.77, pdr: 30 }, 
+  { nome: 'Algodão farelo 38', tipo: 'Concentrado', custo: 2.20, ms: 89.7, pb: 38, ndt: 65.6, ca: 0.24, p: 0.97, pdr: 16 },
+  { nome: 'Algodão farelo 42', tipo: 'Concentrado', custo: 2.20, ms: 90.5, pb: 42, ndt: 69.8, ca: 0.22, p: 0.96, pdr: 16 },
+  { nome: 'Algodão torta', tipo: 'Concentrado', custo: 2.40, ms: 90.4, pb: 29.6, ndt: 75.6, ca: 0.28, p: 0.58, pdr: 40 },
+  { nome: 'Amendoim farelo', tipo: 'Concentrado', custo: 0, ms: 89.4, pb: 56, ndt: 89.5, ca: 0.18, p: 0.62, pdr: 90 },
+  { nome: 'Amiréia (ureia)', tipo: 'Concentrado', custo: 0, ms: 90.6, pb: 200, ndt: 22, ca: 0.12, p: 0.08, pdr: 90 },
+  { nome: 'Babaçu farelo', tipo: 'Concentrado', custo: 0, ms: 90, pb: 20.6, ndt: 71.9, ca: 0.13, p: 0.36, pdr: 40 },
+  { nome: 'Babaçu torta', tipo: 'Concentrado', custo: 0, ms: 90.8, pb: 19.3, ndt: 78, ca: 0.15, p: 0.69, pdr: 40 },
+  { nome: 'Crambe farelo', tipo: 'Concentrado', custo: 0, ms: 89.1, pb: 35.9, ndt: 73.9, ca: 0.29, p: 0.47, pdr: 40 },
+  { nome: 'Canola farelo', tipo: 'Concentrado', custo: 0, ms: 89.4, pb: 40.1, ndt: 83.4, ca: 0.62, p: 0.82, pdr: 40 },
+  { nome: 'Colza farelo', tipo: 'Concentrado', custo: 0, ms: 91.2, pb: 40, ndt: 0, ca: 0.65, p: 1.34, pdr: 50 },
+  { nome: 'Feijão moído', tipo: 'Concentrado', custo: 0, ms: 89.6, pb: 24.2, ndt: 80.8, ca: 0.54, p: 0.43, pdr: 30 },
+  { nome: 'Girassol farelo', tipo: 'Concentrado', custo: 0, ms: 90.2, pb: 31.4, ndt: 71.1, ca: 0.3, p: 0.9, pdr: 40},
+  { nome: 'Linhaça farelo', tipo: 'Concentrado', custo: 0, ms: 92, pb: 34, ndt: 0, ca: 0.6, p: 0.6, pdr: 40 },
+  { nome: 'Mamona farelo detoxificado', tipo: 'Concentrado', custo: 0, ms: 89.2, pb: 38.1, ndt: 69.3, ca: 1.46, p: 0.65, pdr: 30 },
+  { nome: 'Milho glúten 60', tipo: 'Concentrado', custo: 0, ms: 90.6, pb: 60, ndt: 83.9, ca: 0.05, p: 0.44, pdr: 30 },
+  { nome: 'Milho (DDGS)', tipo: 'Concentrado', custo: 0, ms: 91.2, pb: 31.8, ndt: 89, ca: 0.05, p: 0.86, pdr: 30 },
+  { nome: 'Resíduo de cervejaria', tipo: 'Concentrado', custo: 0.45, ms: 22.3, pb: 25.6, ndt: 92.2, ca: 0.33, p: 0.78, pdr: 40 },
+  { nome: 'Soja farelo', tipo: 'Concentrado', custo: 1.62, ms: 87, pb: 45, ndt: 73, ca: 0.3, p: 0.61, pdr: 48.9 },
+  { nome: 'Soja grão tostado', tipo: 'Concentrado', custo: 0, ms: 91.7, pb: 39.1, ndt: 94.2, ca: 0.25, p: 0.49, pdr: 40.2 },
+
+// Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
+
+// Forragens verdes
+{nome:'Amendoim forrageiro', tipo:'Volumoso', custo:0.8, ms:22.8, pb:18.4, ndt:54.5, ca:2.1, p:0.22, pdr:40}, // PDR estimado
+{nome:'Cana-de-açúcar', tipo:'Volumoso', custo:0.3, ms:28.9, pb:2.8, ndt:64.5, ca:0.24, p:0.08, pdr:41}, // PDR real
+{nome:'Capim braquiária brizantha', tipo:'Volumoso', custo:0.6, ms:34, pb:6.9, ndt:52, ca:0.31, p:0.11, pdr:40}, // PDR estimado
+{nome:'Capim bb (46-60 dias)', tipo:'Volumoso', custo:0.6, ms:20.8, pb:9.5, ndt:55.7, ca:0.71, p:0.47, pdr:40}, // PDR estimado
+{nome:'Capim bb (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:24.9, pb:6.5, ndt:58, ca:0.46, p:0.38, pdr:40}, // PDR estimado
+{nome:'Capim bb (91-120 dias)', tipo:'Volumoso', custo:0.6, ms:27.7, pb:4.8, ndt:54, ca:0.58, p:0.17, pdr:40}, // PDR estimado
+{nome:'Capim braquiária marandu', tipo:'Volumoso', custo:0.6, ms:33.2, pb:7.7, ndt:51.5, ca:0.28, p:0.09, pdr:40}, // PDR estimado
+{nome:'Capim bm (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:37.8, pb:5.5, ndt:53, ca:0.08, p:0.05, pdr:40}, // PDR estimado
+{nome:'Capim braq. marandu outono', tipo:'Volumoso', custo:0.6, ms:31, pb:11.8, ndt:55, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bm primavera', tipo:'Volumoso', custo:0.6, ms:27, pb:11.3, ndt:58.7, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bm verão', tipo:'Volumoso', custo:0.6, ms:29, pb:12.3, ndt:54, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bb MG4', tipo:'Volumoso', custo:0.6, ms:23, pb:9.2, ndt:52.6, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bb MG4 (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:29, pb:6.4, ndt:53, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bb piatã (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:34, pb:4.7, ndt:55.8, ca:0, p:0, pdr:40}, // PDR estimado
+{nome:'Capim bb xaraés', tipo:'Volumoso', custo:0.6, ms:23, pb:9.3, ndt:56, ca:0.6, p:0.09, pdr:40}, // PDR estimado
+{nome:'Capim braquiária decumbens', tipo:'Volumoso', custo:0.6, ms:28.5, pb:6.7, ndt:51.5, ca:0.4, p:0.1, pdr:40}, // PDR estimado
+{nome:'Capim bd (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:27.8, pb:7.2, ndt:49.3, ca:0.3, p:0.19, pdr:40}, // PDR estimado
+{nome:'Capim bb (91-120 dias)', tipo:'Volumoso', custo:0.6, ms:30, pb:5.7, ndt:55.2, ca:0.3, p:0.2, pdr:40}, // PDR estimado
+{nome:'Capim bd (121-150 dias)', tipo:'Volumoso', custo:0.6, ms:43.7, pb:5.1, ndt:56.7, ca:0.72, p:0.28, pdr:40}, // PDR estimado
+{nome:'Capim braquiária humidícola', tipo:'Volumoso', custo:0.6, ms:28, pb:7.4, ndt:54.8, ca:0.38, p:0.12, pdr:40}, // PDR estimado
+{nome:'Capim buffel (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:34.6, pb:7.8, ndt:52.3, ca:0, p:0, pdr:40}, // PDR estimado
 ];
 
 let ingredientes = INGREDIENTES_PADRAO.map(x=>({...x}));

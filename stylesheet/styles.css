@@ -1,0 +1,116 @@
+:root {
+  --main-bg: #f8fafb;
+  --card-bg: #ffffffcc;
+  --primary: #2d9c72;
+  --secondary: #f3c662;
+  --accent: #5c76f6;
+  --danger: #e05757;
+  --border: #e0e5ea;
+  --text: #233347;
+  --muted: #8a94a6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  margin: 0;
+  background: var(--main-bg);
+  color: var(--text);
+}
+
+header, footer {
+  text-align: center;
+  background: var(--card-bg);
+  margin-bottom: 1rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+header h1 { margin: 0 0 0.3em 0; font-weight: 600; color: var(--primary);}
+footer small { color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none;}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.5em;
+}
+.card {
+  background: var(--card-bg);
+  box-shadow: 0 1px 8px #ececec80;
+  border-radius: 1em;
+  margin-bottom: 1.2em;
+  padding: 1.1em 1.4em 1em 1.4em;
+  border: 1px solid var(--border);
+}
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: var(--accent);
+  font-weight: 500;
+}
+.form-row {display: flex; gap: 0.7em; margin-bottom: 0.5em; flex-wrap: wrap;}
+input, select, button {
+  padding: 0.5em 0.7em;
+  margin-bottom: 0.2em;
+  border-radius: 0.5em;
+  border: 1px solid var(--border);
+  font-size: 1em;
+  outline: none;
+}
+input:focus, select:focus { border-color: var(--accent);}
+button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+button.secondary { background: var(--secondary); color: var(--text);}
+button.add-btn { background: var(--accent);}
+button:hover { filter: brightness(0.95);}
+#ingredientes-table {
+  width: 100%; margin-top: 0.7em; border-collapse: collapse; font-size: 0.99em;
+}
+#ingredientes-table th, #ingredientes-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.45em 0.3em;
+  text-align: center;
+}
+#ingredientes-table th { background: #f5f7fa;}
+#ingredientes-table td:last-child button { background: var(--danger);}
+#ingredientes-table td:last-child button:hover { opacity: 0.75;}
+#ingredientes-table td { vertical-align: middle; }
+.actions {
+  display: flex; gap: 1em; justify-content: flex-end; flex-wrap: wrap; margin-bottom: 2em;
+}
+.grid-limites {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+  gap: 0.7em;
+  margin-top: 0.8em;
+}
+#resultado-section {
+  margin-bottom: 2em;
+}
+#resultados {
+  padding: 0.7em 0.3em;
+}
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.7em;
+}
+.result-table th, .result-table td {
+  border: 1px solid var(--border);
+  padding: 0.3em 0.5em;
+  text-align: center;
+}
+@media (max-width: 700px) {
+  main { padding: 0.2em;}
+  .form-row, .actions { flex-direction: column; gap: 0.5em;}
+  .grid-limites { grid-template-columns: 1fr;}
+  .card { padding: 0.9em 0.5em;}
+  #ingredientes-table, .result-table { font-size: 0.95em;}
+}

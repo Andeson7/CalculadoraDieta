@@ -29,7 +29,7 @@ body {
 header,
 footer {
   text-align: center;
-  background: var(--card-bg);
+  background: var(--primary);
   margin-bottom: 1rem;
   padding: 1rem 0.5rem;
   border-bottom: 1px solid var(--border);
@@ -38,15 +38,21 @@ footer {
 header h1 {
   margin: 0 0 0.3em 0;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--main-bg);
+}
+header p{
+  color: var(--main-bg);
 }
 
 footer small {
-  color: var(--muted);
+  color: #eee;
 }
 footer a {
-  color: var(--accent);
+  color: #eee;
   text-decoration: none;
+}
+footer p{
+  color:#eee;
 }
 
 main {
@@ -396,4 +402,63 @@ button:hover {
 #ingredientes-table::-webkit-scrollbar-thumb {
   background: #e0e5ea;
   border-radius: 8px;
+}
+
+
+/* TABELAS RESPONSIVAS */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0.5em 0 1.1em 0;
+}
+.table-responsive table {
+  min-width: 550px;
+}
+/* Ajustes finos para fonte/table em telas pequenas */
+@media (max-width: 700px) {
+  .table-responsive table {
+    min-width: 420px;
+    font-size: 0.94em;
+  }
+}
+
+/* Responsividade do header/footer */
+@media (max-width: 700px) {
+  .header-content,
+  .footer-content {
+    flex-direction: column;
+    gap: 0.7em;
+    text-align: center;
+  }
+  .main-header {
+    padding: 1.15em 0;
+  }
+  .main-footer {
+    border-radius: 0.7em 0.7em 0 0;
+    padding: 1.3em 0 1em 0;
+  }
+}
+
+/* TABELAS RESPONSIVAS */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0.5em 0 1.1em 0;
+}
+.table-responsive table {
+  min-width: 550px;
+}
+/* Ajustes finos para fonte/table em telas pequenas */
+@media (max-width: 700px) {
+  .table-responsive table {
+    min-width: 420px;
+    font-size: 0.94em;
+  }
+}
+
+/* Fonte da tabela */
+.table-source {
+  font-size: 0.92em;
+  color: var(--muted);
+  margin-bottom: 0.5em;
 }

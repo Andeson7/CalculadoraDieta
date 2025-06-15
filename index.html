@@ -116,7 +116,56 @@ thead {
 tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+/* calculadora MS cordeiros */
+.calculadora-container {
+  background: #fff;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 32px 24px 24px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
+.inputMS[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+.inputMS[type="number"]:focus {
+  border-color: #14532d;
+}
+
+.buttonMS {
+  width: 100%;
+  background-color: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+
+.resultadoMS {
+  margin-top: 24px;
+  font-size: 1.1rem;
+  color: #222;
+  font-weight:normal;
+  min-height: 24px;
+}
+
     </style>
+    
   <section class="card"> 
     <div class="table-responsive">
       <h2>Tabela 1: Concentrações de nutrientes para rações de ovinos com base na % da MS</h2>
@@ -205,6 +254,22 @@ tbody tr:nth-child(even) {
           </table>
           <p>Fonte: CABRAL, et al., 2008.</p>
       </div>
+      
+
+        <div class="calculadora-container">
+          <h2>Calculadora de Consumo de Matéria Seca (CMS) para Cordeiros</h2>
+          <form id="cms-form">
+            <label for="pv">Peso Vivo (PV) [kg]:</label>
+            <input class="inputMS" type="number" id="pv" name="pv" min="0" step="any" required><br>
+
+            <label for="gpd">Ganho de Peso Diário (GPD) [kg/dia]:</label>
+            <input class="inputMS" type="number" id="gpd" name="gpd" min="0" step="any" required>
+
+            <button type="button" class="buttonMS" id="calcular">Calcular</button>
+          </form>
+          <div class="resultadoMS" id="resultado"></div>
+        </div> <br>
+       
 
       <div class="table-responsive">
 

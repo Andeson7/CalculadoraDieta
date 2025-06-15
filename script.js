@@ -21,7 +21,8 @@ const INGREDIENTES_PADRAO = [
   {nome:'Grão de sorgo', tipo:'Concentrado', custo:1.5, ms:89, pb:10, ndt:85, ca:0.07, p:0.34, pdr:60},
   {nome:'Mineral Ovinos', tipo:'Concentrado', custo:4.0, ms:100, pb:0, ndt:0, ca:21, p:6, pdr:0},
 
-   // Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
+
+  // Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
 
 {nome:'Arroz farelo desengordurado', tipo:'Concentrado', custo:1.2, ms:88.2, pb:16.8, ndt:24.9, ca:0.09, p:1.8, pdr:50}, // PDR estimado
 {nome:'Arroz farelo desfinitizado', tipo:'Concentrado', custo:1.2, ms:90.8, pb:18.0, ndt:0, ca:0.31, p:2.04, pdr:50}, // PDR estimado
@@ -102,6 +103,7 @@ const INGREDIENTES_PADRAO = [
 {nome:'Capim bd (121-150 dias)', tipo:'Volumoso', custo:0.6, ms:43.7, pb:5.1, ndt:56.7, ca:0.72, p:0.28, pdr:40}, // PDR estimado
 {nome:'Capim braquiária humidícola', tipo:'Volumoso', custo:0.6, ms:28, pb:7.4, ndt:54.8, ca:0.38, p:0.12, pdr:40}, // PDR estimado
 {nome:'Capim buffel (61-90 dias)', tipo:'Volumoso', custo:0.6, ms:34.6, pb:7.8, ndt:52.3, ca:0, p:0, pdr:40}, // PDR estimado
+
 ];
 
 let ingredientes = INGREDIENTES_PADRAO.map(x=>({...x}));
@@ -172,12 +174,19 @@ function atualizarSelecaoIngredientes() {
     const card = document.createElement('div');
     card.className = "ingrediente-selecao-card";
     card.innerHTML = `
-      <label style="min-width:110px">${ing.nome} <span style="color:${ing.tipo==='Volumoso'?'#2d9c72':'#5c76f6'}">[${ing.tipo}]</span></label>
-      <span style="font-size:90%;color:var(--muted)">Limite:</span>
+      <label>
+    ${ing.nome} 
+    <span class="tipo-${ing.tipo.toLowerCase()}">[${ing.tipo}]</span>
+  </label>
+  <div class="limite-group">
+    <label>Limite:</label>
+    <div class="limite-inputs">
       <input type="number" id="limite-min-${idx}" value="${limMin}" min="0" max="100" step="0.1">
-      <span style="margin:0 2px;font-size:90%;">a</span>
+      <span style="font-size:90%;">a</span>
       <input type="number" id="limite-max-${idx}" value="${limMax}" min="0" max="100" step="0.1">
-      <span style="font-size:90%;">%MS</span>
+    </div>
+    <span style="font-size:90%;">%MS</span>
+  </div>
     `;
     div.appendChild(card);
     setTimeout(()=>{
@@ -519,6 +528,36 @@ function desenharGrafico(res) {
     ctx.restore();
   });
 }
+
+// ---- Calculo da MS para cordeiros 
+
+ document.getElementById('calcular').addEventListener('click', function () {
+        const pvInput = document.getElementById('pv');
+        const gpdInput = document.getElementById('gpd');
+        const resultadoDiv = document.getElementById('resultado');
+        
+        const pv = parseFloat(pvInput.value);
+        const gpd = parseFloat(gpdInput.value);
+
+        if (isNaN(pv) || isNaN(gpd) || pv <= 0) {
+          resultadoDiv.textContent = 'Por favor, preencha ambos os campos com valores válidos (PV deve ser maior que zero).';
+          return;
+        }
+
+        // CMS (kg/animal/dia) = 0,311 + ((0,0197 x PV) + (0,682 x GPD))
+        const cms = 0.311 + ((0.0197 * pv) + (0.682 * gpd));
+        const cmsPercentual = (cms / pv) * 100;
+
+        resultadoDiv.innerHTML = `
+          Consumo de Matéria Seca (CMS): <b>${cms.toFixed(3)} kg/animal/dia</b><br>
+          CMS em relação ao PV: <b>${cmsPercentual.toFixed(2)}% PV</b>
+        `;
+      });
+
+
+// -- Final calculo da MS para cordeiros 
+
+
 
 // ---- Exportar PDF (em nova página, formato organizado) ----
 function exportarPDF() {

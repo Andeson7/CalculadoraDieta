@@ -13,6 +13,41 @@
   </header>
 
   <main>
+        <section class="card" id="animal-section">
+        <h2>Informações dos Animais</h2>
+        <form id="animal-form">
+          <div class="form-row">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" required>
+              <option value="">Selecione</option>
+              <option value="Mantença">Mantença</option>
+              <option value="Flushing">Flushing</option>
+              <option value="Gestantes">Gestantes</option>
+              <option value="Lactação">Lactação</option>
+              <option value="Cordeiro Crescimento">Cordeiro Crescimento</option>
+              <option value="Cordeiro Terminação">Cordeiro Terminação</option>
+              <option value="Borrego/Borrega Reposição">Borrego/Borrega Reposição</option>
+              <option value="Reprodutores">Reprodutores</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="pv-animal">Peso Vivo (PV) [kg]:</label>
+            <input type="number" id="pv-animal" min="0" step="any" required>
+          </div>
+          <div class="form-row">
+            <label for="ms-animal">Consumo de Matéria Seca (MS) [kg/dia]:</label>
+            <input type="number" id="ms-animal" min="0" step="any" required>
+          </div>
+          <div class="form-row">
+            <label for="GPD-animal">Ganho de Peso Diário (GPD) [kg/dia]:</label>
+            <input type="number" id="gpd-animal" min="0" step="any" required>
+          </div>
+          <div class="form-row">
+            <label for="num-animais">Animais no rebanho:</label>
+            <input type="number" id="num-animais" min="1" value="1" required>
+          </div>
+        </form>
+      </section>
     <section class="card" id="ingredientes-section">
       <h2>Cadastro de Ingredientes</h2>
       <form id="ingrediente-form">
@@ -165,7 +200,7 @@ tbody tr:nth-child(even) {
 }
 
     </style>
-    
+
   <section class="card"> 
     <div class="table-responsive">
       <h2>Tabela 1: Concentrações de nutrientes para rações de ovinos com base na % da MS</h2>

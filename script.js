@@ -561,7 +561,6 @@ function desenharGrafico(res) {
 
 // ---- Exportar PDF (em nova página, formato organizado) ----
 function exportarPDF() {
-  // Busca a última mistura calculada
   const resultadoSection = document.getElementById('resultado-section');
   const resultadosDiv = document.getElementById('resultados');
   if (resultadoSection.style.display === "none" || !resultadosDiv.innerHTML) {
@@ -569,45 +568,77 @@ function exportarPDF() {
     return;
   }
 
-  // Extrai dados do último cálculo
   let sec = resultadosDiv.querySelector('.result-table');
   if (!sec) {
     alert("Calcule uma dieta antes de exportar.");
     return;
   }
 
-  // Dados dos ingredientes
-  let linhas = [];
-  let totalKgNat = 0, totalKgMS = 0, totalCustoMS = 0;
+  // --- Captura dados do formulário dos animais ---
+  const categoria = document.getElementById('categoria')?.value || '';
+  const pv = parseFloat(document.getElementById('pv-animal')?.value) || 0;
+  const ms = parseFloat(document.getElementById('ms-animal')?.value) || 0;
+  const gpd = parseFloat(document.getElementById('gpd-animal')?.value) || 0;
+  const numAnimais = parseInt(document.getElementById('num-animais')?.value, 10) || 1;
 
+  // Consumo total de MS no lote (kg/dia)
+  const consumoMSLote = ms * numAnimais;
+
+  // --- Consumo total de Matéria Natural no lote (correto, proporcional de cada ingrediente) ---
+  // 1. Obtenha proporções dos ingredientes na mistura (em MS), conforme mostrado na última tabela de resultados.
+  // 2. Para cada ingrediente, calcule MS_ingrediente no lote e depois MN_ingrediente do lote.
+  // 3. Some todas as MN_ingrediente para o total.
+  let nomesIngredientes = [];
+  let proporcoesMS = [];
+  let totalMS = 0;
   sec.querySelectorAll("tbody tr").forEach(tr => {
     let tds = tr.querySelectorAll("td");
     if (tds.length === 4) {
       let nome = tds[0].innerText;
-      //let tipo = tds[1].innerText; // não usar mais
+      let kgMS = parseFloat(tds[3].innerText.replace(",", "."));
+      nomesIngredientes.push(nome);
+      proporcoesMS.push(kgMS);
+      totalMS += kgMS;
+    }
+  });
+  // Normaliza para proporção
+  let propsMS = proporcoesMS.map(kgMS => kgMS / totalMS);
+
+  // Consumo total de MN no lote
+  let consumoMNTotalLote = 0;
+  for (let i = 0; i < nomesIngredientes.length; i++) {
+    let nome = nomesIngredientes[i];
+    let prop = propsMS[i];
+    let ing = ingredientes.find(x => x.nome === nome);
+    if (ing && ing.ms > 0) {
+      let msIngredienteLote = consumoMSLote * prop; // MS desse ingrediente no lote
+      let mnIngredienteLote = msIngredienteLote / (ing.ms / 100); // MN desse ingrediente no lote
+      consumoMNTotalLote += mnIngredienteLote;
+    }
+  }
+
+  // Dados dos ingredientes para a tabela (ajuste para 100kg MS)
+  let linhas = [];
+  let totalKgNat = 0, totalKgMS = 0, totalCustoMS = 0;
+  sec.querySelectorAll("tbody tr").forEach(tr => {
+    let tds = tr.querySelectorAll("td");
+    if (tds.length === 4) {
+      let nome = tds[0].innerText;
       let kgNat = parseFloat(tds[2].innerText.replace(",", "."));
       let kgMS = parseFloat(tds[3].innerText.replace(",", "."));
       totalKgNat += kgNat;
       totalKgMS += kgMS;
-
-      // Encontrar o ingrediente para custo
       let ing = ingredientes.find(i => i.nome === nome);
       let custoMS = ing ? ((100 / ing.ms) * ing.custo) : 0;
-      let custoPropMS = custoMS * kgMS; // custo para a quantidade na MS
-
+      let custoPropMS = custoMS * kgMS;
       totalCustoMS += custoPropMS;
-
       linhas.push({
         ingrediente: nome,
-        kgNat,
-        kgMS,
-        custoUnitMS: custoMS,
-        custoPropMS
+        kgNat, kgMS, custoUnitMS: custoMS, custoPropMS
       });
     }
   });
 
-  // Para ajustar para 100 kg MS e proporcional MN:
   let fatorMS = totalKgMS > 0 ? 100 / totalKgMS : 1;
   let linhas100 = linhas.map(l => ({
     ingrediente: l.ingrediente,
@@ -619,7 +650,7 @@ function exportarPDF() {
   let totalKgNat100 = linhas100.reduce((a, b) => a + b.kgNat, 0);
   let totalCustoMS100 = linhas100.reduce((a, b) => a + b.custoPropMS, 0);
 
-  // Dados do resumo nutricional
+  // Resumo nutricional
   let resumo = {};
   resultadosDiv.querySelectorAll("ul li").forEach(li => {
     let key = li.innerText.split(":")[0].replace("Relação ","relacao_").replace(" ", "_").replace("/", "_").toLowerCase();
@@ -627,7 +658,7 @@ function exportarPDF() {
     resumo[key] = val;
   });
 
-  // Gera HTML do PDF
+  // HTML do PDF
   let html = `
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -648,10 +679,28 @@ function exportarPDF() {
     .right { text-align: right; }
     .bold { font-weight: bold; }
     td, th { font-size: 14px; }
+    .animal-table { margin-top: 1.3em; margin-bottom: 1.3em; width: 60%; }
+    .animal-table td { text-align: left; }
+    .animal-table th { background: #e6f4ea; }
+    .highlight { color: #2d9c72; font-weight: bold;}
   </style>
 </head>
 <body>
-  <h1 class="titulo">Relatório da Dieta Otimizada</h1>
+  <h1 class="titulo">Relatório da Dieta Otimizada - <span class="highlight">${categoria || 'Categoria não informada'}</span></h1>
+  
+  <h2>Informações dos Animais</h2>
+  <table class="animal-table">
+    <tbody>
+      <tr><td><b>Categoria:</b></td><td>${categoria || '-'}</td></tr>
+      <tr><td><b>Peso Vivo (PV):</b></td><td>${pv ? pv + " kg" : '-'}</td></tr>
+      <tr><td><b>Ganho de Peso Diário (GPD):</b></td><td>${gpd ? gpd + " kg/dia" : '-'}</td></tr>
+      <tr><td><b>Consumo de MS (por animal):</b></td><td>${ms ? ms + " kg/dia" : '-'}</td></tr>
+      <tr><td><b>Animais no rebanho:</b></td><td>${numAnimais || '-'}</td></tr>
+      <tr><td><b>Consumo total de MS no lote:</b></td><td>${(consumoMSLote ? consumoMSLote.toFixed(2) : '-')} kg/dia</td></tr>
+      <tr><td><b>Consumo total de Matéria Natural no lote (estimado):</b></td><td>${(consumoMNTotalLote ? consumoMNTotalLote.toFixed(2) : '-')} kg/dia</td></tr>
+    </tbody>
+  </table>
+
   <h2>Composição da Mistura (proporção para 100 kg de Matéria Seca)</h2>
   <table>
     <thead>
@@ -699,12 +748,10 @@ function exportarPDF() {
 </html>
   `.trim();
 
-  // Abre nova aba com o relatório
   let win = window.open("", "_blank");
   win.document.write(html);
   win.document.close();
 }
-
 // ---- Inicialização ----
 atualizarTabelaIngredientes();
 preencherLimitesUI();

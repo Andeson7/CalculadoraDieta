@@ -748,6 +748,116 @@ function exportarPDF() {
 </html>
   `.trim();
 
+  // ---- Exportar PDF - Apenas Tabela de Mistura (ingredientes, %MS, %MN) ----
+function exportarMisturaPDF() {
+  // Pega a tabela de resultados da mistura (se existir)
+  const resultadoSection = document.getElementById('resultado-section');
+  const resultadosDiv = document.getElementById('resultados');
+  if (resultadoSection.style.display === "none" || !resultadosDiv.innerHTML) {
+    alert("Calcule uma dieta antes de exportar.");
+    return;
+  }
+
+  let sec = resultadosDiv.querySelector('.result-table');
+  if (!sec) {
+    alert("Calcule uma dieta antes de exportar.");
+    return;
+  }
+
+  // Obtém o nome da categoria (resumido)
+  const categoria = document.getElementById('categoria')?.value || '';
+
+  // Coleta ingredientes
+  let ingredientesTabela = [];
+  let totalMS = 0, totalMN = 0;
+  sec.querySelectorAll("tbody tr").forEach(tr => {
+    let tds = tr.querySelectorAll("td");
+    if (tds.length === 4) {
+      let nome = tds[0].innerText;
+      let kgMS = parseFloat(tds[3].innerText.replace(",", "."));
+      let ing = ingredientes.find(x => x.nome === nome);
+      let kgMN = ing && ing.ms > 0 ? kgMS / (ing.ms / 100) : 0;
+      ingredientesTabela.push({
+        nome,
+        kgMS,
+        kgMN,
+        ms: ing ? ing.ms : 0
+      });
+      totalMS += kgMS;
+      totalMN += kgMN;
+    }
+  });
+
+  // Calcula %MS e %MN para cada ingrediente
+  ingredientesTabela = ingredientesTabela.map(ing => ({
+    ...ing,
+    pctMS: totalMS > 0 ? (ing.kgMS / totalMS) * 100 : 0,
+    pctMN: totalMN > 0 ? (ing.kgMN / totalMN) * 100 : 0
+  }));
+
+  // Monta HTML do PDF resumido
+  let html = `
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Composição da Mistura - PDF</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; color: #232323; }
+    h1 { color: #2d9c72; margin-bottom: 0.5em; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.2em;}
+    th, td { border: 1px solid #e0e5ea; padding: 6px 10px; text-align: center;}
+    th { background: #f5f7fa;}
+    td, th { font-size: 15px; }
+    .footer { margin-top: 2.5em; color: #999; font-size: 12px;}
+    .titulo { margin-bottom: 0.2em;}
+    .highlight { color: #2d9c72; font-weight: bold;}
+  </style>
+</head>
+<body>
+  <h1 class="titulo">Composição da Mistura da Ração</h1>
+  <p><b>Categoria:</b> <span class="highlight">${categoria || '-'}</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Ingrediente</th>
+        <th>% na Matéria Seca</th>
+        <th>% na Matéria Natural</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${ingredientesTabela.map(ing => `
+        <tr>
+          <td>${ing.nome}</td>
+          <td>${ing.pctMS.toFixed(2)}%</td>
+          <td>${ing.pctMN.toFixed(2)}%</td>
+        </tr>
+      `).join("")}
+      <tr style="font-weight:bold;">
+        <td>Total</td>
+        <td>${ingredientesTabela.reduce((a, b) => a + b.pctMS, 0).toFixed(2)}%</td>
+        <td>${ingredientesTabela.reduce((a, b) => a + b.pctMN, 0).toFixed(2)}%</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="footer">
+    Gerado por: AgroCrat LTDA - ${new Date().toLocaleString('pt-BR')}
+  </div>
+  <script>
+    window.onload = function() { window.print(); }
+  </script>
+</body>
+</html>
+  `.trim();
+
+  let win = window.open("", "_blank");
+  win.document.write(html);
+  win.document.close();
+}
+
+// ---- Botão de exportar mistura (já existe no HTML com id="mistura-btn") ----
+document.getElementById('mistura-btn').onclick = exportarMisturaPDF;
+
   let win = window.open("", "_blank");
   win.document.write(html);
   win.document.close();

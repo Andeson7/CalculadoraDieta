@@ -85,9 +85,16 @@ main {
 }
 
 input,
-select,
-button {
+select{
   padding: 0.6em 0.4em;
+  margin-bottom: 0.2em;
+  border-radius: 0.5em;
+  border: 1px solid var(--border);
+  font-size: 1em;
+  outline: none;
+}
+button {
+  padding: 0.5em 0.7em;
   margin-bottom: 0.2em;
   border-radius: 0.5em;
   border: 1px solid var(--border);

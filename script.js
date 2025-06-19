@@ -293,7 +293,7 @@ modalIngredientesForm.onsubmit = function(e){
 }
 
 // ---- Cadastro novo ingrediente ----
-document.getElementById('ingrediente-form').onsubmit = e => {
+/* document.getElementById('ingrediente-form').onsubmit = e => {
   e.preventDefault();
   const nome = document.getElementById('nome').value.trim();
   const tipo = document.getElementById('tipo').value;
@@ -312,7 +312,7 @@ document.getElementById('ingrediente-form').onsubmit = e => {
   ingredientes.push({nome, tipo, custo, ms, pb, ndt, ca, p, pdr});
   atualizarTabelaIngredientes();
   limparCamposIngrediente();
-}
+} */
 
 // ---- Limites gerais ----
 document.getElementById('limites-form').oninput = () => {

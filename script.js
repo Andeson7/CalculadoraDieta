@@ -531,7 +531,7 @@ function desenharGrafico(res) {
 
 // ---- Calculo da MS para cordeiros 
 
- document.getElementById('calcular').addEventListener('click', function () {
+ /*document.getElementById('calcular').addEventListener('click', function () {
         const pvInput = document.getElementById('pv');
         const gpdInput = document.getElementById('gpd');
         const resultadoDiv = document.getElementById('resultado');
@@ -552,7 +552,220 @@ function desenharGrafico(res) {
           Consumo de Matéria Seca (CMS): <b>${cms.toFixed(3)} kg/animal/dia</b><br>
           CMS em relação ao PV: <b>${cmsPercentual.toFixed(2)}% PV</b>
         `;
-      });
+      }); */
+
+
+
+      /// Tabela de exigências energéticas conforme fornecido
+      const tabelaEnergia = [
+        { pv: 20, gmd: 0.15, elm: 0.54, elg: 0.43, emm: 0.82, em: 1.03, ndt: 0.51 },
+        { pv: 20, gmd: 0.20, elm: 0.54, elg: 0.58, emm: 0.82, em: 1.38, ndt: 0.61 },
+        { pv: 20, gmd: 0.25, elm: 0.54, elg: 0.72, emm: 0.82, em: 1.72, ndt: 0.70 },
+        { pv: 20, gmd: 0.30, elm: 0.54, elg: 0.87, emm: 0.82, em: 2.07, ndt: 0.80 },
+        { pv: 20, gmd: 0.35, elm: 0.54, elg: 1.01, emm: 0.82, em: 2.41, ndt: 0.89 },
+        { pv: 25, gmd: 0.15, elm: 0.64, elg: 0.47, emm: 0.97, em: 1.11, ndt: 0.57 },
+        { pv: 25, gmd: 0.20, elm: 0.64, elg: 0.62, emm: 0.97, em: 1.48, ndt: 0.68 },
+        { pv: 25, gmd: 0.25, elm: 0.64, elg: 0.78, emm: 0.97, em: 1.85, ndt: 0.78 },
+        { pv: 25, gmd: 0.30, elm: 0.64, elg: 0.93, emm: 0.97, em: 2.22, ndt: 0.88 },
+        { pv: 25, gmd: 0.35, elm: 0.64, elg: 1.09, emm: 0.97, em: 2.59, ndt: 0.98 },
+        { pv: 30, gmd: 0.15, elm: 0.73, elg: 0.50, emm: 1.11, em: 1.19, ndt: 0.63 },
+        { pv: 30, gmd: 0.20, elm: 0.73, elg: 0.66, emm: 1.11, em: 1.58, ndt: 0.74 },
+        { pv: 30, gmd: 0.25, elm: 0.73, elg: 0.83, emm: 1.11, em: 1.98, ndt: 0.85 },
+        { pv: 30, gmd: 0.30, elm: 0.73, elg: 1.00, emm: 1.11, em: 2.37, ndt: 0.96 },
+        { pv: 30, gmd: 0.35, elm: 0.73, elg: 1.16, emm: 1.11, em: 2.77, ndt: 1.07 },
+        { pv: 35, gmd: 0.15, elm: 0.82, elg: 0.53, emm: 1.24, em: 1.26, ndt: 0.69 },
+        { pv: 35, gmd: 0.20, elm: 0.82, elg: 0.71, emm: 1.24, em: 1.68, ndt: 0.81 },
+        { pv: 35, gmd: 0.25, elm: 0.82, elg: 0.88, emm: 1.24, em: 2.10, ndt: 0.93 },
+        { pv: 35, gmd: 0.30, elm: 0.82, elg: 1.06, emm: 1.24, em: 2.53, ndt: 1.04 },
+        { pv: 35, gmd: 0.35, elm: 0.82, elg: 1.24, emm: 1.24, em: 2.95, ndt: 1.16 }
+      ];
+
+      // Tabela de exigências de proteína conforme fornecido
+      const tabelaProteina = [
+        // PV, GMD, PMm, PLg, PB
+        { pv: 20, gmd: 0.15, pmm: 37.83, plg: 27.30, pb: 99.99 },
+        { pv: 20, gmd: 0.20, pmm: 37.83, plg: 36.39, pb: 118.3 },
+        { pv: 20, gmd: 0.25, pmm: 37.83, plg: 45.49, pb: 136.7 },
+        { pv: 20, gmd: 0.30, pmm: 37.83, plg: 54.59, pb: 155.0 },
+        { pv: 20, gmd: 0.35, pmm: 37.83, plg: 63.69, pb: 173.4 },
+        { pv: 25, gmd: 0.15, pmm: 44.72, plg: 27.10, pb: 107.5 },
+        { pv: 25, gmd: 0.20, pmm: 44.72, plg: 36.13, pb: 125.6 },
+        { pv: 25, gmd: 0.25, pmm: 44.72, plg: 45.16, pb: 143.8 },
+        { pv: 25, gmd: 0.30, pmm: 44.72, plg: 54.20, pb: 162.0 },
+        { pv: 25, gmd: 0.35, pmm: 44.72, plg: 63.23, pb: 180.1 },
+        { pv: 30, gmd: 0.15, pmm: 51.27, plg: 26.91, pb: 114.7 },
+        { pv: 30, gmd: 0.20, pmm: 51.27, plg: 35.88, pb: 132.6 },
+        { pv: 30, gmd: 0.25, pmm: 51.27, plg: 44.85, pb: 150.6 },
+        { pv: 30, gmd: 0.30, pmm: 51.27, plg: 53.82, pb: 168.5 },
+        { pv: 30, gmd: 0.35, pmm: 51.27, plg: 62.79, pb: 186.5 },
+        { pv: 35, gmd: 0.15, pmm: 57.56, plg: 26.73, pb: 121.5 },
+        { pv: 35, gmd: 0.20, pmm: 57.56, plg: 35.64, pb: 139.3 },
+        { pv: 35, gmd: 0.25, pmm: 57.56, plg: 44.55, pb: 157.0 },
+        { pv: 35, gmd: 0.30, pmm: 57.56, plg: 53.46, pb: 174.8 },
+        { pv: 35, gmd: 0.35, pmm: 57.56, plg: 62.37, pb: 192.6 }
+      ];
+
+      // Função que retorna a linha mais próxima da tabela, dado PV e GMD
+      function encontrarEnergiaTabulada(pv, gmd) {
+        const PVs = [...new Set(tabelaEnergia.map(e => e.pv))];
+        const GMDs = [...new Set(tabelaEnergia.map(e => e.gmd))];
+        let pvMaisProx = PVs.reduce((prev, curr) =>
+          Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
+        );
+        let gmdMaisProx = GMDs.reduce((prev, curr) =>
+          Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
+        );
+        let linha = tabelaEnergia.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
+        return linha || null;
+      }
+
+      function encontrarProteinaTabulada(pv, gmd) {
+        const PVs = [...new Set(tabelaProteina.map(e => e.pv))];
+        const GMDs = [...new Set(tabelaProteina.map(e => e.gmd))];
+        let pvMaisProx = PVs.reduce((prev, curr) =>
+          Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
+        );
+        let gmdMaisProx = GMDs.reduce((prev, curr) =>
+          Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
+        );
+        let linha = tabelaProteina.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
+        return linha || null;
+      }
+
+      function calcular() {
+        const PV = parseFloat(document.getElementById('peso').value);
+        const GMDg = parseFloat(document.getElementById('gmd').value);
+        const GPD = GMDg / 1000;
+        const categoria = document.getElementById('categoria').value;
+
+        // Consumo de Matéria Seca (CMS)
+        const CMS = 0.311 + ((0.0197 * PV) + (0.682 * GPD));
+
+        // Busca valores tabulados de energia e proteína
+        const energia = encontrarEnergiaTabulada(PV, GPD);
+        const proteina = encontrarProteinaTabulada(PV, GPD);
+
+        // Exibição em tabelas bem organizadas:
+        document.getElementById('resultadosCal').innerHTML = `
+            <div class="result-section">
+              <h2>Consumo de Matéria Seca</h2>
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Valor</th>
+                    <th>Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Consumo de Matéria Seca (CMS)</td>
+                    <td>${CMS.toFixed(3)}</td>
+                    <td>kg/animal/dia</td>
+                  </tr>
+                  <tr>
+                    <td>% (CMS) com base no PV</td>
+                    <td>${((CMS*100)/PV).toFixed(2)}</td>
+                    <td>%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="result-section">
+              <h2>Energia </h2>
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Valor</th>
+                    <th>Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${energia ? `
+                  <tr><td>Energia Líquida de Mantença (ELm)</td><td>${energia.elm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+                  <tr><td>Energia Líquida para Ganho (ELg)</td><td>${energia.elg.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+                  <tr><td>Energia Metabolizável de Mantença (EMm)</td><td>${energia.emm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+                  <tr><td>Energia Metabolizável Total (EM)</td><td>${energia.em.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+                  <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${energia.ndt.toFixed(2)}</td><td>kg/animal/dia</td></tr>
+                  ` : `
+                  <tr>
+                    <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de energia não estão disponíveis.</td>
+                  </tr>
+                  `}
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="result-section">
+              <h2>Proteína </h2>
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Valor</th>
+                    <th>Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${proteina ? `
+                  <tr><td>Proteína Metabolizável de Mantença (PMm)</td><td>${proteina.pmm.toFixed(2)}</td><td>g/animal/dia</td></tr>
+                  <tr><td>Proteína Líquida para Ganho (PLg)</td><td>${proteina.plg.toFixed(2)}</td><td>g/animal/dia</td></tr>
+                  <tr><td>Proteína Bruta (PB)</td><td>${proteina.pb.toFixed(2)}</td><td>g/animal/dia</td></tr>
+                  ` : `
+                  <tr>
+                    <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de proteína não estão disponíveis.</td>
+                  </tr>
+                  `}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="result-section">
+              <h2>Cálcio (Ca)</h2>
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Valor</th>
+                    <th>Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Cálcio (Ca)</td>
+                    <td>${(CMS*0.55).toFixed(3)} a ${(CMS*0.7).toFixed(3)}  </td>
+                    <td>g/animal/dia</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+
+            <div class="result-section">
+              <h2>Fósforo (P)</h2>
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Valor</th>
+                    <th>Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Fósforo (P)</td>
+                    <td>${(CMS*0.22).toFixed(3)} a ${((CMS*0.3)).toFixed(2)}</td>
+                    <td>g/animal/dia</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+
+        `;
+      }
 
 
 // -- Final calculo da MS para cordeiros 
@@ -749,7 +962,16 @@ function exportarPDF() {
   `.trim();
 
 
-  // ---- Exportar PDF - Apenas Tabela de Mistura (ingredientes, %MS, %MN) ----
+  // ---- Exportar PDF (em nova página, formato organizado) ----
+function exportarPDF() {
+  // ... (restante do código da função exportarPDF permanece igual)
+
+  let win = window.open("", "_blank");
+  win.document.write(html);
+  win.document.close();
+}
+
+// ---- Exportar Mistura PDF (tabela resumida corretamente calculada) ----
 function exportarMisturaPDF() {
   // Pega a tabela de resultados da mistura (se existir)
   const resultadoSection = document.getElementById('resultado-section');
@@ -768,32 +990,42 @@ function exportarMisturaPDF() {
   // Obtém o nome da categoria (resumido)
   const categoria = document.getElementById('categoria')?.value || '';
 
-  // Coleta ingredientes
+  // Coleta os ingredientes e as proporções de MS
   let ingredientesTabela = [];
   let totalMS = 0, totalMN = 0;
+  let linhasTemp = [];
   sec.querySelectorAll("tbody tr").forEach(tr => {
     let tds = tr.querySelectorAll("td");
     if (tds.length === 4) {
       let nome = tds[0].innerText;
-      let kgMS = parseFloat(tds[3].innerText.replace(",", "."));
+      let pctMS = parseFloat(tds[3].innerText.replace(",", "."));
       let ing = ingredientes.find(x => x.nome === nome);
-      let kgMN = ing && ing.ms > 0 ? kgMS / (ing.ms / 100) : 0;
-      ingredientesTabela.push({
+      if (!ing) return;
+      let kgMS = pctMS; // porcentagem de MS, mas usaremos como referência 100kg MS depois
+      let kgMN = ing.ms > 0 ? kgMS / (ing.ms / 100) : 0;
+      linhasTemp.push({
         nome,
         kgMS,
         kgMN,
-        ms: ing ? ing.ms : 0
+        ms: ing.ms
       });
-      totalMS += kgMS;
-      totalMN += kgMN;
     }
   });
 
-  // Calcula %MS e %MN para cada ingrediente
-  ingredientesTabela = ingredientesTabela.map(ing => ({
+  // Calcula o total de MS e MN
+  totalMS = linhasTemp.reduce((a, b) => a + b.kgMS, 0);
+  totalMN = linhasTemp.reduce((a, b) => a + b.kgMN, 0);
+
+  // Calcula proporção correta para 100kg de MS e MN, e percentuais
+  let fatorMS = totalMS > 0 ? 100 / totalMS : 1;
+  let fatorMN = totalMN > 0 ? 100 / totalMN : 1;
+
+  ingredientesTabela = linhasTemp.map(ing => ({
     ...ing,
     pctMS: totalMS > 0 ? (ing.kgMS / totalMS) * 100 : 0,
-    pctMN: totalMN > 0 ? (ing.kgMN / totalMN) * 100 : 0
+    pctMN: totalMN > 0 ? (ing.kgMN / totalMN) * 100 : 0,
+    kgMS_100: ing.kgMS * fatorMS,
+    kgMN_100: ing.kgMN * fatorMS // ajustado para soma 100kg MS
   }));
 
   // Monta HTML do PDF resumido
@@ -822,6 +1054,8 @@ function exportarMisturaPDF() {
     <thead>
       <tr>
         <th>Ingrediente</th>
+        
+        <th>kg na Matéria Natural<br>(100 kg MS)</th>
         <th>% na Matéria Seca</th>
         <th>% na Matéria Natural</th>
       </tr>
@@ -830,12 +1064,16 @@ function exportarMisturaPDF() {
       ${ingredientesTabela.map(ing => `
         <tr>
           <td>${ing.nome}</td>
+         
+          <td>${ing.kgMN_100.toFixed(2)}</td>
           <td>${ing.pctMS.toFixed(2)}%</td>
           <td>${ing.pctMN.toFixed(2)}%</td>
         </tr>
       `).join("")}
       <tr style="font-weight:bold;">
         <td>Total</td>
+       
+        <td>${ingredientesTabela.reduce((a, b) => a + b.kgMN_100, 0).toFixed(2)}</td>
         <td>${ingredientesTabela.reduce((a, b) => a + b.pctMS, 0).toFixed(2)}%</td>
         <td>${ingredientesTabela.reduce((a, b) => a + b.pctMN, 0).toFixed(2)}%</td>
       </tr>
@@ -855,6 +1093,7 @@ function exportarMisturaPDF() {
   win.document.write(html);
   win.document.close();
 }
+
 
 // ---- Botão de exportar mistura (já existe no HTML com id="mistura-btn") ----
 document.getElementById('mistura-btn').onclick = exportarMisturaPDF;

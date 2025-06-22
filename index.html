@@ -39,7 +39,7 @@
             <input type="number" id="pv-animal" min="0" step="any" required>
           </div>
           <div class="form-row">
-            <label for="ms-animal">Consumo de Matéria Seca (MS) [kg/dia]:</label>
+            <label for="ms-animal">Consumo de Matéria Seca (CMS) [kg/dia]:</label>
             <input type="number" id="ms-animal" min="0" step="any" required>
           </div>
           <div class="form-row">
@@ -54,8 +54,8 @@
       </section>
     <section class="card" id="ingredientes-section">
       <h2>Selecione os Ingredientes</h2>
-    <!--   <form id="ingrediente-form">
-        <div class="form-row"> 
+     <!--   <form id="ingrediente-form">
+       <div class="form-row"> 
           <input type="text" id="nome" placeholder="Nome" required>
           <select id="tipo" required>
             <option value="">Tipo</option>
@@ -123,7 +123,8 @@
     <section class="card actions">
       <button id="calcular-btn">Calcular Dieta</button>
       <button id="limpar-btn" class="secondary">Limpar Campos</button>
-     
+      <!--<button id="exportar-btn" class="secondary">Imprimir Relatório</button>
+      <button id="mistura-btn" class="secondary">Imprimir Mistura</button> -->
     </section>
 
     <section class="card" id="resultado-section" style="display:none;">
@@ -298,7 +299,7 @@ tbody tr:nth-child(even) {
       
 
         <div class="calculadora-container">
-          <h2>Calculadora de Consumo de Matéria Seca (CMS) para Cordeiros</h2>
+          <h2>Calcular Consumo de Matéria Seca (CMS) para Cordeiros</h2>
           <form id="cms-form">
             <label for="pv">Peso Vivo (PV) [kg]:</label>
             <input class="inputMS" type="number" id="pv" name="pv" min="0" step="any" required><br>

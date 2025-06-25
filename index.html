@@ -31,10 +31,10 @@
             </select><br>
 
             <label for="peso">Peso Vivo (PV, kg):</label> 
-            <input type="number" id="peso" name="peso" step="0.01" min="10" required> <br>
+            <input type="number" id="peso" name="peso" step="0.01" min="10" max="120" required> <br>
 
             <label for="gmd">Ganho Médio Diário (GMD, g/dia):</label>
-            <input type="number" id="gmd" name="gmd" step="0.01" min="0" required> <br>
+            <input type="number" id="gmd" name="gmd" step="0.01" min="0" max="450"> <br>
 
             <button type="submit">Calcular</button>
           </form>
@@ -48,7 +48,7 @@
         <section class="card" id="animal-section">
         <h2>Informações dos Animais</h2>
         <form id="animal-form">
-          <div class="form-row">
+         <!-- <div class="form-row">
             <label for="categoria">Categoria:</label>
             <select id="categoria" required>
               <option value="">Selecione</option>
@@ -68,16 +68,16 @@
           </div>
           <div class="form-row">
             <label for="pv-animal">Peso Vivo (PV, kg):</label>
-            <input type="number" id="pv-animal" min="0" step="any" required>
-          </div>
+            <input type="number" id="pv-animal" min="0" max="120" step="any" required>
+          </div> -->
           <div class="form-row">
-            <label for="ms-animal">Consumo de Matéria Seca (CMS, kg/dia):</label>
+            <label for="ms-animal">Consumo de Matéria Seca (CMS, kg/animal/dia):</label>
             <input type="number" id="ms-animal" min="0" step="any" required>
           </div>
-          <div class="form-row">
+         <!-- <div class="form-row">
             <label for="gpd-animal">Ganho de Peso Diário (GPD, g/dia):</label>
-            <input type="number" id="gpd-animal" min="0" step="any" required>
-          </div>
+            <input type="number" id="gpd-animal" min="0" max="450" step="any" required>
+          </div> -->
           <div class="form-row">
             <label for="num-animais">Animais no rebanho:</label>
             <input type="number" id="num-animais" min="1" value="1" required>

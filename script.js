@@ -556,217 +556,304 @@ function desenharGrafico(res) {
 
 
 
-      /// Tabela de exigências energéticas conforme fornecido
-      const tabelaEnergia = [
-        { pv: 20, gmd: 0.15, elm: 0.54, elg: 0.43, emm: 0.82, em: 1.03, ndt: 0.51 },
-        { pv: 20, gmd: 0.20, elm: 0.54, elg: 0.58, emm: 0.82, em: 1.38, ndt: 0.61 },
-        { pv: 20, gmd: 0.25, elm: 0.54, elg: 0.72, emm: 0.82, em: 1.72, ndt: 0.70 },
-        { pv: 20, gmd: 0.30, elm: 0.54, elg: 0.87, emm: 0.82, em: 2.07, ndt: 0.80 },
-        { pv: 20, gmd: 0.35, elm: 0.54, elg: 1.01, emm: 0.82, em: 2.41, ndt: 0.89 },
-        { pv: 25, gmd: 0.15, elm: 0.64, elg: 0.47, emm: 0.97, em: 1.11, ndt: 0.57 },
-        { pv: 25, gmd: 0.20, elm: 0.64, elg: 0.62, emm: 0.97, em: 1.48, ndt: 0.68 },
-        { pv: 25, gmd: 0.25, elm: 0.64, elg: 0.78, emm: 0.97, em: 1.85, ndt: 0.78 },
-        { pv: 25, gmd: 0.30, elm: 0.64, elg: 0.93, emm: 0.97, em: 2.22, ndt: 0.88 },
-        { pv: 25, gmd: 0.35, elm: 0.64, elg: 1.09, emm: 0.97, em: 2.59, ndt: 0.98 },
-        { pv: 30, gmd: 0.15, elm: 0.73, elg: 0.50, emm: 1.11, em: 1.19, ndt: 0.63 },
-        { pv: 30, gmd: 0.20, elm: 0.73, elg: 0.66, emm: 1.11, em: 1.58, ndt: 0.74 },
-        { pv: 30, gmd: 0.25, elm: 0.73, elg: 0.83, emm: 1.11, em: 1.98, ndt: 0.85 },
-        { pv: 30, gmd: 0.30, elm: 0.73, elg: 1.00, emm: 1.11, em: 2.37, ndt: 0.96 },
-        { pv: 30, gmd: 0.35, elm: 0.73, elg: 1.16, emm: 1.11, em: 2.77, ndt: 1.07 },
-        { pv: 35, gmd: 0.15, elm: 0.82, elg: 0.53, emm: 1.24, em: 1.26, ndt: 0.69 },
-        { pv: 35, gmd: 0.20, elm: 0.82, elg: 0.71, emm: 1.24, em: 1.68, ndt: 0.81 },
-        { pv: 35, gmd: 0.25, elm: 0.82, elg: 0.88, emm: 1.24, em: 2.10, ndt: 0.93 },
-        { pv: 35, gmd: 0.30, elm: 0.82, elg: 1.06, emm: 1.24, em: 2.53, ndt: 1.04 },
-        { pv: 35, gmd: 0.35, elm: 0.82, elg: 1.24, emm: 1.24, em: 2.95, ndt: 1.16 }
-      ];
+      // --- Tabelas de referência para cordeiros (energia e proteína) ---
+const tabelaEnergia = [
+  { pv: 20, gmd: 0.15, elm: 0.54, elg: 0.43, emm: 0.82, em: 1.03, ndt: 0.51 },
+  { pv: 20, gmd: 0.20, elm: 0.54, elg: 0.58, emm: 0.82, em: 1.38, ndt: 0.61 },
+  { pv: 20, gmd: 0.25, elm: 0.54, elg: 0.72, emm: 0.82, em: 1.72, ndt: 0.70 },
+  { pv: 20, gmd: 0.30, elm: 0.54, elg: 0.87, emm: 0.82, em: 2.07, ndt: 0.80 },
+  { pv: 20, gmd: 0.35, elm: 0.54, elg: 1.01, emm: 0.82, em: 2.41, ndt: 0.89 },
+  { pv: 25, gmd: 0.15, elm: 0.64, elg: 0.47, emm: 0.97, em: 1.11, ndt: 0.57 },
+  { pv: 25, gmd: 0.20, elm: 0.64, elg: 0.62, emm: 0.97, em: 1.48, ndt: 0.68 },
+  { pv: 25, gmd: 0.25, elm: 0.64, elg: 0.78, emm: 0.97, em: 1.85, ndt: 0.78 },
+  { pv: 25, gmd: 0.30, elm: 0.64, elg: 0.93, emm: 0.97, em: 2.22, ndt: 0.88 },
+  { pv: 25, gmd: 0.35, elm: 0.64, elg: 1.09, emm: 0.97, em: 2.59, ndt: 0.98 },
+  { pv: 30, gmd: 0.15, elm: 0.73, elg: 0.50, emm: 1.11, em: 1.19, ndt: 0.63 },
+  { pv: 30, gmd: 0.20, elm: 0.73, elg: 0.66, emm: 1.11, em: 1.58, ndt: 0.74 },
+  { pv: 30, gmd: 0.25, elm: 0.73, elg: 0.83, emm: 1.11, em: 1.98, ndt: 0.85 },
+  { pv: 30, gmd: 0.30, elm: 0.73, elg: 1.00, emm: 1.11, em: 2.37, ndt: 0.96 },
+  { pv: 30, gmd: 0.35, elm: 0.73, elg: 1.16, emm: 1.11, em: 2.77, ndt: 1.07 },
+  { pv: 35, gmd: 0.15, elm: 0.82, elg: 0.53, emm: 1.24, em: 1.26, ndt: 0.69 },
+  { pv: 35, gmd: 0.20, elm: 0.82, elg: 0.71, emm: 1.24, em: 1.68, ndt: 0.81 },
+  { pv: 35, gmd: 0.25, elm: 0.82, elg: 0.88, emm: 1.24, em: 2.10, ndt: 0.93 },
+  { pv: 35, gmd: 0.30, elm: 0.82, elg: 1.06, emm: 1.24, em: 2.53, ndt: 1.04 },
+  { pv: 35, gmd: 0.35, elm: 0.82, elg: 1.24, emm: 1.24, em: 2.95, ndt: 1.16 }
+];
 
-      // Tabela de exigências de proteína conforme fornecido
-      const tabelaProteina = [
-        // PV, GMD, PMm, PLg, PB
-        { pv: 20, gmd: 0.15, pmm: 37.83, plg: 27.30, pb: 99.99 },
-        { pv: 20, gmd: 0.20, pmm: 37.83, plg: 36.39, pb: 118.3 },
-        { pv: 20, gmd: 0.25, pmm: 37.83, plg: 45.49, pb: 136.7 },
-        { pv: 20, gmd: 0.30, pmm: 37.83, plg: 54.59, pb: 155.0 },
-        { pv: 20, gmd: 0.35, pmm: 37.83, plg: 63.69, pb: 173.4 },
-        { pv: 25, gmd: 0.15, pmm: 44.72, plg: 27.10, pb: 107.5 },
-        { pv: 25, gmd: 0.20, pmm: 44.72, plg: 36.13, pb: 125.6 },
-        { pv: 25, gmd: 0.25, pmm: 44.72, plg: 45.16, pb: 143.8 },
-        { pv: 25, gmd: 0.30, pmm: 44.72, plg: 54.20, pb: 162.0 },
-        { pv: 25, gmd: 0.35, pmm: 44.72, plg: 63.23, pb: 180.1 },
-        { pv: 30, gmd: 0.15, pmm: 51.27, plg: 26.91, pb: 114.7 },
-        { pv: 30, gmd: 0.20, pmm: 51.27, plg: 35.88, pb: 132.6 },
-        { pv: 30, gmd: 0.25, pmm: 51.27, plg: 44.85, pb: 150.6 },
-        { pv: 30, gmd: 0.30, pmm: 51.27, plg: 53.82, pb: 168.5 },
-        { pv: 30, gmd: 0.35, pmm: 51.27, plg: 62.79, pb: 186.5 },
-        { pv: 35, gmd: 0.15, pmm: 57.56, plg: 26.73, pb: 121.5 },
-        { pv: 35, gmd: 0.20, pmm: 57.56, plg: 35.64, pb: 139.3 },
-        { pv: 35, gmd: 0.25, pmm: 57.56, plg: 44.55, pb: 157.0 },
-        { pv: 35, gmd: 0.30, pmm: 57.56, plg: 53.46, pb: 174.8 },
-        { pv: 35, gmd: 0.35, pmm: 57.56, plg: 62.37, pb: 192.6 }
-      ];
+const tabelaProteina = [
+  { pv: 20, gmd: 0.15, pmm: 37.83, plg: 27.30, pb: 99.99 },
+  { pv: 20, gmd: 0.20, pmm: 37.83, plg: 36.39, pb: 118.3 },
+  { pv: 20, gmd: 0.25, pmm: 37.83, plg: 45.49, pb: 136.7 },
+  { pv: 20, gmd: 0.30, pmm: 37.83, plg: 54.59, pb: 155.0 },
+  { pv: 20, gmd: 0.35, pmm: 37.83, plg: 63.69, pb: 173.4 },
+  { pv: 25, gmd: 0.15, pmm: 44.72, plg: 27.10, pb: 107.5 },
+  { pv: 25, gmd: 0.20, pmm: 44.72, plg: 36.13, pb: 125.6 },
+  { pv: 25, gmd: 0.25, pmm: 44.72, plg: 45.16, pb: 143.8 },
+  { pv: 25, gmd: 0.30, pmm: 44.72, plg: 54.20, pb: 162.0 },
+  { pv: 25, gmd: 0.35, pmm: 44.72, plg: 63.23, pb: 180.1 },
+  { pv: 30, gmd: 0.15, pmm: 51.27, plg: 26.91, pb: 114.7 },
+  { pv: 30, gmd: 0.20, pmm: 51.27, plg: 35.88, pb: 132.6 },
+  { pv: 30, gmd: 0.25, pmm: 51.27, plg: 44.85, pb: 150.6 },
+  { pv: 30, gmd: 0.30, pmm: 51.27, plg: 53.82, pb: 168.5 },
+  { pv: 30, gmd: 0.35, pmm: 51.27, plg: 62.79, pb: 186.5 },
+  { pv: 35, gmd: 0.15, pmm: 57.56, plg: 26.73, pb: 121.5 },
+  { pv: 35, gmd: 0.20, pmm: 57.56, plg: 35.64, pb: 139.3 },
+  { pv: 35, gmd: 0.25, pmm: 57.56, plg: 44.55, pb: 157.0 },
+  { pv: 35, gmd: 0.30, pmm: 57.56, plg: 53.46, pb: 174.8 },
+  { pv: 35, gmd: 0.35, pmm: 57.56, plg: 62.37, pb: 192.6 }
+];
 
-      // Função que retorna a linha mais próxima da tabela, dado PV e GMD
-      function encontrarEnergiaTabulada(pv, gmd) {
-        const PVs = [...new Set(tabelaEnergia.map(e => e.pv))];
-        const GMDs = [...new Set(tabelaEnergia.map(e => e.gmd))];
-        let pvMaisProx = PVs.reduce((prev, curr) =>
-          Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
-        );
-        let gmdMaisProx = GMDs.reduce((prev, curr) =>
-          Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
-        );
-        let linha = tabelaEnergia.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
-        return linha || null;
-      }
+// --- Tabela de exigências por categoria (todas as categorias da tabela fornecida) ---
+const tabelaCategorias = [
+  { categoria: "Mantença", cms: 1.2, pb: 9.5, ndt: 55, em: 2.0, ca: 0.4, p: 0.2 },
+  { categoria: "Flushing", cms: 1.8, pb: 9.0, ndt: 60, em: 2.1, ca: 0.5, p: 0.2 },
+  { categoria: "Gestantes (1ªs 15 semanas)", cms: 1.4, pb: 9.5, ndt: 55, em: 2.0, ca: 0.5, p: 0.2 },
+  { categoria: "Gestantes últimas-semanas (-40% CMS)", cms: 1.8, pb: 11, ndt: 60, em: 2.1, ca: 0.6, p: 0.25 },
+  { categoria: "Gestantes últimas semanas (-60% CMS)", cms: 2.0, pb: 11.5, ndt: 65, em: 2.3, ca: 0.65, p: 0.3 },
+  { categoria: "Início gestação (1 feto)", cms: 1.3, pb: 8, ndt: 55, em: 1.9, ca: 0.45, p: 0.32 },
+  { categoria: "Final gestação (1 feto)", cms: 1.5, pb: 7, ndt: 65, em: 2.0, ca: 0.55, p: 0.4 },
+  { categoria: "Início gestação (2 fetos)", cms: 1.5, pb: 8.5, ndt: 55, em: 1.9, ca: 0.4, p: 0.28 },
+  { categoria: "Final gestação (2 fetos)", cms: 1.5, pb: 11, ndt: 75, em: 2.6, ca: 0.55, p: 0.35 },
+  { categoria: "Lactação (1 cria)", cms: 2.5, pb: 13.5, ndt: 65, em: 2.3, ca: 0.65, p: 0.3 },
+  { categoria: "Lactação (2 crias)", cms: 2.8, pb: 15, ndt: 65, em: 2.5, ca: 0.75, p: 0.35 },
+  { categoria: "Creep-feeding cordeiros", cms: 0.6, pb: 26.5, ndt: 80, em: 2.9, ca: 0.95, p: 0.4 },
+  { categoria: "Cordeiros crescimento (270 g/dia)", cms: 1.18, pb: 16.5, ndt: 78, em: 2.8, ca: 0.6, p: 0.25 },
+  { categoria: "Cordeiros terminação (360 g/dia)", cms: 1.5, pb: 14.5, ndt: 78, em: 2.7, ca: 0.7, p: 0.3 },
+  { categoria: "Cordeiros terminação (270 g/dia)", cms: 1.6, pb: 12, ndt: 75, em: 2.7, ca: 0.55, p: 0.22 },
+  { categoria: "Borregas reposição", cms: 1.4, pb: 10, ndt: 65, em: 2.4, ca: 0.45, p: 0.18 },
+  { categoria: "Borregos reposição", cms: 2.4, pb: 11, ndt: 65, em: 2.3, ca: 0.45, p: 0.18 },
+  { categoria: "Reprodutores em serviço", cms: 3.0, pb: 10, ndt: 65, em: 2.3, ca: 0.4, p: 0.15 },
+  { categoria: "Confinamento de ovinos", cms: "-", pb: 14, ndt: 65, em: "-", ca: "0.8%", p: "0.4%" }
+];
 
-      function encontrarProteinaTabulada(pv, gmd) {
-        const PVs = [...new Set(tabelaProteina.map(e => e.pv))];
-        const GMDs = [...new Set(tabelaProteina.map(e => e.gmd))];
-        let pvMaisProx = PVs.reduce((prev, curr) =>
-          Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
-        );
-        let gmdMaisProx = GMDs.reduce((prev, curr) =>
-          Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
-        );
-        let linha = tabelaProteina.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
-        return linha || null;
-      }
+// Funções de busca
+function encontrarEnergiaTabulada(pv, gmd) {
+  const PVs = [...new Set(tabelaEnergia.map(e => e.pv))];
+  const GMDs = [...new Set(tabelaEnergia.map(e => e.gmd))];
+  let pvMaisProx = PVs.reduce((prev, curr) =>
+    Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
+  );
+  let gmdMaisProx = GMDs.reduce((prev, curr) =>
+    Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
+  );
+  let linha = tabelaEnergia.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
+  return linha || null;
+}
 
-      function calcular() {
-        const PV = parseFloat(document.getElementById('peso').value);
-        const GMDg = parseFloat(document.getElementById('gmd').value);
-        const GPD = GMDg / 1000;
-        const categoria = document.getElementById('categoria').value;
+function encontrarProteinaTabulada(pv, gmd) {
+  const PVs = [...new Set(tabelaProteina.map(e => e.pv))];
+  const GMDs = [...new Set(tabelaProteina.map(e => e.gmd))];
+  let pvMaisProx = PVs.reduce((prev, curr) =>
+    Math.abs(curr - pv) < Math.abs(prev - pv) ? curr : prev
+  );
+  let gmdMaisProx = GMDs.reduce((prev, curr) =>
+    Math.abs(curr - gmd) < Math.abs(prev - gmd) ? curr : prev
+  );
+  let linha = tabelaProteina.find(e => e.pv === pvMaisProx && e.gmd === gmdMaisProx);
+  return linha || null;
+}
 
-        // Consumo de Matéria Seca (CMS)
-        const CMS = 0.311 + ((0.0197 * PV) + (0.682 * GPD));
+// Preenche o select com todas as categorias automaticamente
+function popularSelectCategorias() {
+  const select = document.getElementById('categoriaCal');
+  if (!select) return;
+  // Adiciona a opção padrão "Cordeiro (crescimento)" (usa cálculo especial)
+  select.innerHTML = `<option value="cordeiro">Cordeiro (crescimento)</option>`;
+  tabelaCategorias.forEach(cat => {
+    select.innerHTML += `<option value="${cat.categoria}">${cat.categoria}</option>`;
+  });
+}
+document.addEventListener("DOMContentLoaded", popularSelectCategorias);
 
-        // Busca valores tabulados de energia e proteína
-        const energia = encontrarEnergiaTabulada(PV, GPD);
-        const proteina = encontrarProteinaTabulada(PV, GPD);
+// Função principal
+function calcular() {
+  const categoria = document.getElementById('categoriaCal').value;
+  const PV = parseFloat(document.getElementById('peso').value);
+  const GMDg = parseFloat(document.getElementById('gmd').value);
+  const GPD = GMDg / 1000;
+  const divResultados = document.getElementById('resultadosCal');
 
-        // Exibição em tabelas bem organizadas:
-        document.getElementById('resultadosCal').innerHTML = `
-            <div class="result-section">
-              <h2>Consumo de Matéria Seca</h2>
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Indicador</th>
-                    <th>Valor</th>
-                    <th>Unidade</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Consumo de Matéria Seca (CMS)</td>
-                    <td>${CMS.toFixed(3)}</td>
-                    <td>kg/animal/dia</td>
-                  </tr>
-                  <tr>
-                    <td>% (CMS) com base no PV</td>
-                    <td>${((CMS*100)/PV).toFixed(2)}</td>
-                    <td>%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <div class="result-section">
-              <h2>Energia </h2>
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Indicador</th>
-                    <th>Valor</th>
-                    <th>Unidade</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${energia ? `
-                  <tr><td>Energia Líquida de Mantença (ELm)</td><td>${energia.elm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
-                  <tr><td>Energia Líquida para Ganho (ELg)</td><td>${energia.elg.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
-                  <tr><td>Energia Metabolizável de Mantença (EMm)</td><td>${energia.emm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
-                  <tr><td>Energia Metabolizável Total (EM)</td><td>${energia.em.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
-                  <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${energia.ndt.toFixed(2)}</td><td>kg/animal/dia</td></tr>
-                  ` : `
-                  <tr>
-                    <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de energia não estão disponíveis.</td>
-                  </tr>
-                  `}
-                </tbody>
-              </table>
-            </div>
-            
-            <div class="result-section">
-              <h2>Proteína </h2>
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Indicador</th>
-                    <th>Valor</th>
-                    <th>Unidade</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${proteina ? `
-                  <tr><td>Proteína Metabolizável de Mantença (PMm)</td><td>${proteina.pmm.toFixed(2)}</td><td>g/animal/dia</td></tr>
-                  <tr><td>Proteína Líquida para Ganho (PLg)</td><td>${proteina.plg.toFixed(2)}</td><td>g/animal/dia</td></tr>
-                  <tr><td>Proteína Bruta (PB)</td><td>${proteina.pb.toFixed(2)}</td><td>g/animal/dia</td></tr>
-                  ` : `
-                  <tr>
-                    <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de proteína não estão disponíveis.</td>
-                  </tr>
-                  `}
-                </tbody>
-              </table>
-            </div>
+  // Para cordeiro, usar tabelas e cálculos específicos
+  if (categoria === "cordeiro") {
+    if (isNaN(PV) || isNaN(GMDg) || PV < 10 || GMDg < 0) {
+      divResultados.innerHTML = `<div style="color:red;">Preencha os campos corretamente.</div>`;
+      return;
+    }
+    // Consumo de Matéria Seca (CMS)
+    const CMS = 0.311 + ((0.0197 * PV) + (0.682 * GPD));
+    // Busca valores tabulados
+    const energia = encontrarEnergiaTabulada(PV, GPD);
+    const proteina = encontrarProteinaTabulada(PV, GPD);
 
-            <div class="result-section">
-              <h2>Cálcio (Ca)</h2>
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Indicador</th>
-                    <th>Valor</th>
-                    <th>Unidade</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Cálcio (Ca)</td>
-                    <td>${(CMS*0.55).toFixed(3)} a ${(CMS*0.7).toFixed(3)}  </td>
-                    <td>g/animal/dia</td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-            </div>
+    divResultados.innerHTML = `
+      <div class="result-section">
+        <h2>Consumo de Matéria Seca</h2>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Consumo de Matéria Seca (CMS)</td>
+              <td>${CMS.toFixed(3)}</td>
+              <td>kg/animal/dia</td>
+            </tr>
+            <tr>
+              <td>% (CMS) com base no PV</td>
+              <td>${((CMS*100)/PV).toFixed(2)}</td>
+              <td>%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="result-section">
+        <h2>Energia</h2>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${energia ? `
+            <tr><td>Energia Líquida de Mantença (ELm)</td><td>${energia.elm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+            <tr><td>Energia Líquida para Ganho (ELg)</td><td>${energia.elg.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+            <tr><td>Energia Metabolizável de Mantença (EMm)</td><td>${energia.emm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+            <tr><td>Energia Metabolizável Total (EM)</td><td>${energia.em.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
+            <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${energia.ndt.toFixed(2)}</td><td>kg/animal/dia</td></tr>
+            ` : `
+            <tr>
+              <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de energia não estão disponíveis.</td>
+            </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+      <div class="result-section">
+        <h2>Proteína</h2>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${proteina ? `
+            <tr><td>Proteína Metabolizável de Mantença (PMm)</td><td>${proteina.pmm.toFixed(2)}</td><td>g/animal/dia</td></tr>
+            <tr><td>Proteína Líquida para Ganho (PLg)</td><td>${proteina.plg.toFixed(2)}</td><td>g/animal/dia</td></tr>
+            <tr><td>Proteína Bruta (PB)</td><td>${proteina.pb.toFixed(2)}</td><td>g/animal/dia</td></tr>
+            ` : `
+            <tr>
+              <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de proteína não estão disponíveis.</td>
+            </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+      <div class="result-section">
+        <h2>Cálcio (Ca)</h2>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cálcio (Ca)</td>
+              <td>${(CMS*0.55).toFixed(3)} a ${(CMS*0.7).toFixed(3)}</td>
+              <td>g/animal/dia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="result-section">
+        <h2>Fósforo (P)</h2>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Unidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fósforo (P)</td>
+              <td>${(CMS*0.22).toFixed(3)} a ${(CMS*0.3).toFixed(2)}</td>
+              <td>g/animal/dia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+    return;
+  }
 
-            <div class="result-section">
-              <h2>Fósforo (P)</h2>
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Indicador</th>
-                    <th>Valor</th>
-                    <th>Unidade</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Fósforo (P)</td>
-                    <td>${(CMS*0.22).toFixed(3)} a ${((CMS*0.3)).toFixed(2)}</td>
-                    <td>g/animal/dia</td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-            </div>
+  // Para qualquer outra categoria, buscar na tabelaCategorias
+  const cat = tabelaCategorias.find(c => c.categoria === categoria);
+  if (!cat) {
+    divResultados.innerHTML = `<div style="color:red;">Categoria não encontrada.</div>`;
+    return;
+  }
 
-        `;
-      }
-
+  divResultados.innerHTML = `
+    <div class="result-section">
+      <h2>Requerimentos Nutricionais (${cat.categoria})</h2>
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Indicador</th>
+            <th>Valor</th>
+            <th>Unidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Consumo de Matéria Seca (CMS)</td>
+            <td>${cat.cms !== null && cat.cms !== "-" ? cat.cms : "-"}</td>
+            <td>kg/animal/dia</td>
+          </tr>
+          <tr>
+            <td>Proteína Bruta (PB)</td>
+            <td>${cat.pb}</td>
+            <td>%MS</td>
+          </tr>
+          <tr>
+            <td>NDT</td>
+            <td>${cat.ndt}</td>
+            <td>%MS</td>
+          </tr>
+          <tr>
+            <td>Energia Metabolizável (EM)</td>
+            <td>${cat.em !== null && cat.em !== "-" ? cat.em : "-"}</td>
+            <td>Mcal/kg</td>
+          </tr>
+          <tr>
+            <td>Cálcio (Ca)</td>
+            <td>${cat.ca}</td>
+            <td>g/kg</td>
+          </tr>
+          <tr>
+            <td>Fósforo (P)</td>
+            <td>${cat.p}</td>
+            <td>g/kg</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
 
 // -- Final calculo da MS para cordeiros 
 
@@ -906,7 +993,7 @@ function exportarPDF() {
     <tbody>
       <tr><td><b>Categoria:</b></td><td>${categoria || '-'}</td></tr>
       <tr><td><b>Peso Vivo (PV):</b></td><td>${pv ? pv + " kg" : '-'}</td></tr>
-      <tr><td><b>Ganho de Peso Diário (GPD):</b></td><td>${gpd ? gpd + " kg/dia" : '-'}</td></tr>
+      <tr><td><b>Ganho de Peso Diário (GPD):</b></td><td>${gpd ? gpd + " g/dia" : '-'}</td></tr>
       <tr><td><b>Consumo de MS (por animal):</b></td><td>${ms ? ms + " kg/dia" : '-'}</td></tr>
       <tr><td><b>Animais no rebanho:</b></td><td>${numAnimais || '-'}</td></tr>
       <tr><td><b>Consumo total de MS no lote:</b></td><td>${(consumoMSLote ? consumoMSLote.toFixed(2) : '-')} kg/dia</td></tr>

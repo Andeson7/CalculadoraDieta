@@ -726,7 +726,8 @@ function calcular() {
             <tr><td>Energia Líquida para Ganho (ELg)</td><td>${energia.elg.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
             <tr><td>Energia Metabolizável de Mantença (EMm)</td><td>${energia.emm.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
             <tr><td>Energia Metabolizável Total (EM)</td><td>${energia.em.toFixed(2)}</td><td>Mcal/animal/dia</td></tr>
-            <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${energia.ndt.toFixed(2)}</td><td>kg/animal/dia</td></tr>
+            <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${energia.ndt.toFixed(2)}</td><td>Kg/animal/dia</td></tr>
+            <tr><td>Nutrientes Digestíveis Totais (NDT)</td><td>${(energia.ndt*100/CMS).toFixed(2)}</td><td>%</td></tr>
             ` : `
             <tr>
               <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de energia não estão disponíveis.</td>
@@ -750,6 +751,7 @@ function calcular() {
             <tr><td>Proteína Metabolizável de Mantença (PMm)</td><td>${proteina.pmm.toFixed(2)}</td><td>g/animal/dia</td></tr>
             <tr><td>Proteína Líquida para Ganho (PLg)</td><td>${proteina.plg.toFixed(2)}</td><td>g/animal/dia</td></tr>
             <tr><td>Proteína Bruta (PB)</td><td>${proteina.pb.toFixed(2)}</td><td>g/animal/dia</td></tr>
+            <tr><td>Proteína Bruta (PB)</td><td>${((proteina.pb)*100/(CMS*1000)).toFixed(2)}</td><td>%</td></tr>
             ` : `
             <tr>
               <td colspan="3">PV e GMD fora da faixa da tabela. Os valores de proteína não estão disponíveis.</td>
@@ -771,8 +773,13 @@ function calcular() {
           <tbody>
             <tr>
               <td>Cálcio (Ca)</td>
-              <td>${(CMS*0.55).toFixed(3)} a ${(CMS*0.7).toFixed(3)}</td>
+              <td>${(CMS*1000*0.0045).toFixed(1)} a ${(CMS*1000*0.0055).toFixed(1)}</td>
               <td>g/animal/dia</td>
+            </tr>
+            <tr>
+              <td>Cálcio (Ca)</td>
+              <td>${((CMS*1000*0.0045*100)/(CMS*1000)).toFixed(2)} a ${((CMS*1000*0.0055*100)/(CMS*1000)).toFixed(2)}</td>
+              <td>%</td>
             </tr>
           </tbody>
         </table>
@@ -790,8 +797,13 @@ function calcular() {
           <tbody>
             <tr>
               <td>Fósforo (P)</td>
-              <td>${(CMS*0.22).toFixed(3)} a ${(CMS*0.3).toFixed(2)}</td>
+              <td>${(CMS*1000*0.0022).toFixed(1)} a ${(CMS*1000*0.003).toFixed(1)}</td>
               <td>g/animal/dia</td>
+            </tr>
+            <tr>
+              <td>Fósforo (P)</td>
+              <td>${((CMS*1000*0.0022*100)/(CMS*1000)).toFixed(2)} a ${((CMS*1000*0.003*100)/(CMS*1000)).toFixed(2)}</td>
+              <td>%</td>
             </tr>
           </tbody>
         </table>
@@ -875,10 +887,10 @@ function exportarPDF() {
   }
 
   // --- Captura dados do formulário dos animais ---
-  const categoria = document.getElementById('categoria')?.value || '';
-  const pv = parseFloat(document.getElementById('pv-animal')?.value) || 0;
+  const categoria = document.getElementById('categoriaCal')?.value || '';
+  const pv = parseFloat(document.getElementById('peso')?.value) || 0;
   const ms = parseFloat(document.getElementById('ms-animal')?.value) || 0;
-  const gpd = parseFloat(document.getElementById('gpd-animal')?.value) || 0;
+  const gpd = parseFloat(document.getElementById('gmd')?.value) || 0;
   const numAnimais = parseInt(document.getElementById('num-animais')?.value, 10) || 1;
 
   // Consumo total de MS no lote (kg/dia)

@@ -494,14 +494,14 @@ function desenharGrafico(res) {
   ctx.font = "14px Arial";
   ctx.textAlign = "center";
   ctx.fillText("Participação dos ingredientes (%MS)", cv.width / 2, y0-15);
-
+ 
   let max = Math.max(...res.props.map(v=>v*100), 10);
   res.ingredientesUsar.forEach((ing,idx) => {
     let v = res.props[idx]*100;
     let barh = v/max*h;
     let x = x0 + idx * (barWidth + gap);
 
-    ctx.fillStyle = ing.tipo==='Volumoso' ? "#2d9c72" : "#5c76f6";
+    ctx.fillStyle = ing.tipo==='Volumoso' ? "#2d9c72" : "#daa520";
     ctx.fillRect(x, y0+h-barh, barWidth, barh);
 
     // Valor no topo da barra

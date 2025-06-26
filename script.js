@@ -872,6 +872,7 @@ function calcular() {
 
 
 // ---- Exportar PDF (em nova página, formato organizado) ----
+// --- Exportar Dieta Otimizada PDF ---
 function exportarPDF() {
   const resultadoSection = document.getElementById('resultado-section');
   const resultadosDiv = document.getElementById('resultados');
@@ -896,10 +897,7 @@ function exportarPDF() {
   // Consumo total de MS no lote (kg/dia)
   const consumoMSLote = ms * numAnimais;
 
-  // --- Consumo total de Matéria Natural no lote (correto, proporcional de cada ingrediente) ---
-  // 1. Obtenha proporções dos ingredientes na mistura (em MS), conforme mostrado na última tabela de resultados.
-  // 2. Para cada ingrediente, calcule MS_ingrediente no lote e depois MN_ingrediente do lote.
-  // 3. Some todas as MN_ingrediente para o total.
+  // --- Consumo total de Matéria Natural no lote e proporções ---
   let nomesIngredientes = [];
   let proporcoesMS = [];
   let totalMS = 0;
@@ -916,18 +914,25 @@ function exportarPDF() {
   // Normaliza para proporção
   let propsMS = proporcoesMS.map(kgMS => kgMS / totalMS);
 
-  // Consumo total de MN no lote
+  // Consumo total de MN no lote e proporções de cada ingrediente
   let consumoMNTotalLote = 0;
+  let proporcoesMNIngredientes = [];
   for (let i = 0; i < nomesIngredientes.length; i++) {
     let nome = nomesIngredientes[i];
     let prop = propsMS[i];
     let ing = ingredientes.find(x => x.nome === nome);
     if (ing && ing.ms > 0) {
-      let msIngredienteLote = consumoMSLote * prop; // MS desse ingrediente no lote
-      let mnIngredienteLote = msIngredienteLote / (ing.ms / 100); // MN desse ingrediente no lote
+      let msIngredienteLote = consumoMSLote * prop;
+      let mnIngredienteLote = msIngredienteLote / (ing.ms / 100);
       consumoMNTotalLote += mnIngredienteLote;
+      proporcoesMNIngredientes.push({ nome, mnIngredienteLote, prop }); // temporário, ajusta depois
     }
   }
+  // Agora calcula % de cada ingrediente sobre o total de MN
+  proporcoesMNIngredientes = proporcoesMNIngredientes.map(row => ({
+    ...row,
+    pctMN: consumoMNTotalLote > 0 ? (row.mnIngredienteLote / consumoMNTotalLote) * 100 : 0
+  }));
 
   // Dados dos ingredientes para a tabela (ajuste para 100kg MS)
   let linhas = [];
@@ -1039,6 +1044,32 @@ function exportarPDF() {
       </tr>
     </tbody>
   </table>
+
+  <h2>Proporção dos Ingredientes no Consumo Total de Matéria Natural do Lote</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Ingrediente</th>
+        <th>kg (MN no lote/dia)</th>
+        <th>% no total de MN</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${proporcoesMNIngredientes.map(row => `
+        <tr>
+          <td>${row.nome}</td>
+          <td>${row.mnIngredienteLote.toFixed(2)}</td>
+          <td>${row.pctMN.toFixed(2)}%</td>
+        </tr>
+      `).join("")}
+      <tr style="font-weight:bold;">
+        <td>Total</td>
+        <td>${consumoMNTotalLote.toFixed(2)}</td>
+        <td>100.00%</td>
+      </tr>
+    </tbody>
+  </table>
+
   <h2>Resumo Nutricional e Custos</h2>
   <table class="nutr-table">
     <tbody>
@@ -1060,19 +1091,14 @@ function exportarPDF() {
 </html>
   `.trim();
 
-
-  // ---- Exportar PDF (em nova página, formato organizado) ----
-function exportarPDF() {
-  // ... (restante do código da função exportarPDF permanece igual)
-
+  // Exporta em nova página/aba
   let win = window.open("", "_blank");
   win.document.write(html);
   win.document.close();
 }
 
-// ---- Exportar Mistura PDF (tabela resumida corretamente calculada) ----
+// --- Exportar Mistura PDF (tabela resumida com kg (MN no lote/dia)) ---
 function exportarMisturaPDF() {
-  // Pega a tabela de resultados da mistura (se existir)
   const resultadoSection = document.getElementById('resultado-section');
   const resultadosDiv = document.getElementById('resultados');
   if (resultadoSection.style.display === "none" || !resultadosDiv.innerHTML) {
@@ -1086,48 +1112,56 @@ function exportarMisturaPDF() {
     return;
   }
 
-  // Obtém o nome da categoria (resumido)
-  const categoria = document.getElementById('categoria')?.value || '';
+  const categoria = document.getElementById('categoriaCal')?.value || '';
 
-  // Coleta os ingredientes e as proporções de MS
-  let ingredientesTabela = [];
-  let totalMS = 0, totalMN = 0;
-  let linhasTemp = [];
+  // --- Pega dados do animal para calcular consumo do lote ---
+  const ms = parseFloat(document.getElementById('ms-animal')?.value) || 0;
+  const numAnimais = parseInt(document.getElementById('num-animais')?.value, 10) || 1;
+
+  const consumoMSLote = ms * numAnimais;
+
+  // --- Coleta proporções dos ingredientes na MS do resultado (do usuário) ---
+  let nomesIngredientes = [];
+  let proporcoesMS = [];
+  let totalMS = 0;
   sec.querySelectorAll("tbody tr").forEach(tr => {
     let tds = tr.querySelectorAll("td");
     if (tds.length === 4) {
       let nome = tds[0].innerText;
-      let pctMS = parseFloat(tds[3].innerText.replace(",", "."));
-      let ing = ingredientes.find(x => x.nome === nome);
-      if (!ing) return;
-      let kgMS = pctMS; // porcentagem de MS, mas usaremos como referência 100kg MS depois
-      let kgMN = ing.ms > 0 ? kgMS / (ing.ms / 100) : 0;
-      linhasTemp.push({
-        nome,
-        kgMS,
-        kgMN,
-        ms: ing.ms
-      });
+      let kgMS = parseFloat(tds[3].innerText.replace(",", "."));
+      nomesIngredientes.push(nome);
+      proporcoesMS.push(kgMS);
+      totalMS += kgMS;
     }
   });
+  // Proporção de cada ingrediente na MS
+  let propsMS = proporcoesMS.map(kgMS => kgMS / totalMS);
 
-  // Calcula o total de MS e MN
-  totalMS = linhasTemp.reduce((a, b) => a + b.kgMS, 0);
-  totalMN = linhasTemp.reduce((a, b) => a + b.kgMN, 0);
-
-  // Calcula proporção correta para 100kg de MS e MN, e percentuais
-  let fatorMS = totalMS > 0 ? 100 / totalMS : 1;
-  let fatorMN = totalMN > 0 ? 100 / totalMN : 1;
-
-  ingredientesTabela = linhasTemp.map(ing => ({
-    ...ing,
-    pctMS: totalMS > 0 ? (ing.kgMS / totalMS) * 100 : 0,
-    pctMN: totalMN > 0 ? (ing.kgMN / totalMN) * 100 : 0,
-    kgMS_100: ing.kgMS * fatorMS,
-    kgMN_100: ing.kgMN * fatorMS // ajustado para soma 100kg MS
+  // --- Cálculo dos valores para a tabela ---
+  let ingredientesTabela = [];
+  let consumoMNTotalLote = 0;
+  for (let i = 0; i < nomesIngredientes.length; i++) {
+    let nome = nomesIngredientes[i];
+    let prop = propsMS[i];
+    let ing = ingredientes.find(x => x.nome === nome);
+    if (ing && ing.ms > 0) {
+      let msIngredienteLote = consumoMSLote * prop;
+      let mnIngredienteLote = msIngredienteLote / (ing.ms / 100);
+      consumoMNTotalLote += mnIngredienteLote;
+      ingredientesTabela.push({
+        nome,
+        mnIngredienteLote,
+        prop
+      });
+    }
+  }
+  // Percentuais para tabela
+  ingredientesTabela = ingredientesTabela.map(row => ({
+    ...row,
+    pctMN: consumoMNTotalLote > 0 ? (row.mnIngredienteLote / consumoMNTotalLote) * 100 : 0
   }));
 
-  // Monta HTML do PDF resumido
+  // HTML resumido (apenas a tabela principal, com kg (MN no lote/dia))
   let html = `
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -1153,31 +1187,26 @@ function exportarMisturaPDF() {
     <thead>
       <tr>
         <th>Ingrediente</th>
-        
-        <th>kg na Matéria Natural<br>(100 kg MS)</th>
-        <th>% na Matéria Seca</th>
-        <th>% na Matéria Natural</th>
+        <th>kg (MN no lote/dia)</th>
+        <th>% no total de MN</th>
       </tr>
     </thead>
     <tbody>
       ${ingredientesTabela.map(ing => `
         <tr>
           <td>${ing.nome}</td>
-         
-          <td>${ing.kgMN_100.toFixed(2)}</td>
-          <td>${ing.pctMS.toFixed(2)}%</td>
+          <td>${ing.mnIngredienteLote.toFixed(2)}</td>
           <td>${ing.pctMN.toFixed(2)}%</td>
         </tr>
       `).join("")}
       <tr style="font-weight:bold;">
         <td>Total</td>
-       
-        <td>${ingredientesTabela.reduce((a, b) => a + b.kgMN_100, 0).toFixed(2)}</td>
-        <td>${ingredientesTabela.reduce((a, b) => a + b.pctMS, 0).toFixed(2)}%</td>
-        <td>${ingredientesTabela.reduce((a, b) => a + b.pctMN, 0).toFixed(2)}%</td>
+        <td>${consumoMNTotalLote.toFixed(2)}</td>
+        <td>100.00%</td>
       </tr>
     </tbody>
   </table>
+
   <div class="footer">
     Gerado por: AgroCrat LTDA - ${new Date().toLocaleString('pt-BR')}
   </div>
@@ -1193,14 +1222,9 @@ function exportarMisturaPDF() {
   win.document.close();
 }
 
-
 // ---- Botão de exportar mistura (já existe no HTML com id="mistura-btn") ----
 document.getElementById('mistura-btn').onclick = exportarMisturaPDF;
 
-  let win = window.open("", "_blank");
-  win.document.write(html);
-  win.document.close();
-}
 // ---- Inicialização ----
 atualizarTabelaIngredientes();
 preencherLimitesUI();

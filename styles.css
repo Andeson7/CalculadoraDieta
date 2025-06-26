@@ -84,14 +84,15 @@ main {
   flex-wrap: wrap;
 }
 
-input,
-select{
+input, select {
+  
   padding: 0.6em 0.4em;
   margin-bottom: 0.2em;
   border-radius: 0.5em;
-  border: 1px solid var(--border);
+  border: 1px solid gray;
   font-size: 1em;
   outline: none;
+
 }
 button {
   padding: 0.5em 0.7em;
@@ -104,7 +105,7 @@ button {
 
 input:focus,
 select:focus {
-  border-color: var(--accent);
+  border-color: var(--primary);
 }
 
 button {
@@ -207,23 +208,82 @@ button:hover {
 
 .ingrediente-selecao-card {
   display: flex;
-  align-items: center;
-  gap: 1em;
-  background: #f8fafb;
-  border: 1px solid var(--border);
-  border-radius: 0.7em;
-  padding: 0.5em 1em;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45em;
+  background: #fff;
+  border: 1.5px solid #e0e5ea;
+  border-radius: 0.9em;
+  padding: 1em 1.3em;
+  margin-bottom: 1em;
+  box-shadow: 0 1px 8px #e0e5ea33;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .ingrediente-selecao-card label {
-  min-width: 110px;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 0.15em;
+  display: block;
+  font-size: 1.08em;
 }
 
-.ingrediente-selecao-card input[type="number"] {
-  width: 70px;
+.ingrediente-selecao-card .tipo-volumoso {
+  color: #2d9c72;
+  font-weight: 500;
+  font-size: 0.96em;
 }
+
+.ingrediente-selecao-card .tipo-concentrado {
+  color: goldenrod;
+  font-weight: 500;
+  font-size: 0.96em;
+}
+
+.limite-group {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+  margin-bottom: 0.3em;
+  flex-wrap: wrap;
+}
+
+.limite-group label {
+  font-weight: 400;
+  color: #8a94a6;
+  font-size: 0.98em;
+  margin-right: 0.4em;
+}
+
+.limite-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.limite-inputs input[type="number"] {
+  width: 54px;
+  padding: 0.27em 0.33em;
+  border-radius: 0.4em;
+  font-size: 1em;
+  border: 1px solid #e0e5ea;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .ingrediente-selecao-card {
+    padding: 0.7em 0.5em;
+  }
+  .limite-group,
+  .limite-inputs {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.18em;
+  }
+  .limite-inputs input[type="number"] {
+    width: 50px;
+  }
+}
+
 
 /* Modal */
 .modal-bg {
@@ -409,6 +469,7 @@ button:hover {
 #ingredientes-table::-webkit-scrollbar-thumb {
   background: #e0e5ea;
   border-radius: 8px;
+  
 }
 
 

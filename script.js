@@ -20,6 +20,11 @@ const INGREDIENTES_PADRAO = [
   {nome:'Torta de girassol', tipo:'Concentrado', custo:2.7, ms:90, pb:28, ndt:76, ca:0.38, p:1.2, pdr:4},
   {nome:'Grão de sorgo', tipo:'Concentrado', custo:1.5, ms:89, pb:10, ndt:85, ca:0.07, p:0.34, pdr:6},
   {nome:'Mineral Ovinos', tipo:'Concentrado', custo:4.0, ms:100, pb:0, ndt:0, ca:21, p:6, pdr:0},
+  {nome:'Sal Comum', tipo:'Concentrado', custo:1.0, ms:99, pb:0, ndt:0, ca:0, p:0, pdr:0},
+  {nome:'Calcário', tipo:'Concentrado', custo:0.6, ms:100, pb:0, ndt:0, ca:38, p:0, pdr:0},
+  {nome:'Calcário Calcítico', tipo:'Concentrado', custo:1.0, ms:100, pb:0, ndt:0, ca:34, p:0, pdr:0},
+  {nome:'Calcário Dolomítico', tipo:'Concentrado', custo:1.0, ms:100, pb:0, ndt:0, ca:20, p:0, pdr:0},
+  {nome:'Fosfato bicálcico', tipo:'Concentrado', custo:1.0, ms:100, pb:0, ndt:0, ca:23, p:18, pdr:0},
 
 
   // Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
@@ -62,22 +67,22 @@ const INGREDIENTES_PADRAO = [
   { nome: 'Algodão farelo 38', tipo: 'Concentrado', custo: 2.20, ms: 89.7, pb: 38, ndt: 65.6, ca: 0.24, p: 0.97, pdr: 16 },
   { nome: 'Algodão farelo 42', tipo: 'Concentrado', custo: 2.20, ms: 90.5, pb: 42, ndt: 69.8, ca: 0.22, p: 0.96, pdr: 16 },
   { nome: 'Algodão torta', tipo: 'Concentrado', custo: 2.40, ms: 90.4, pb: 29.6, ndt: 81.9, ca: 0.28, p: 0.58, pdr: 23.7 },
-  { nome: 'Amendoim farelo', tipo: 'Concentrado', custo: 0, ms: 89.4, pb: 56, ndt: 89.5, ca: 0.18, p: 0.62, pdr: 90 },
-  { nome: 'Amiréia (ureia)', tipo: 'Concentrado', custo: 0, ms: 90.6, pb: 200, ndt: 22, ca: 0.12, p: 0.08, pdr: 90 },
-  { nome: 'Babaçu farelo', tipo: 'Concentrado', custo: 0, ms: 90, pb: 20.6, ndt: 71.9, ca: 0.13, p: 0.36, pdr: 4 },
-  { nome: 'Babaçu torta', tipo: 'Concentrado', custo: 0, ms: 90.8, pb: 19.3, ndt: 78, ca: 0.15, p: 0.69, pdr: 4 },
+  { nome: 'Amendoim farelo', tipo: 'Concentrado', custo: 0.3, ms: 89.4, pb: 56, ndt: 89.5, ca: 0.18, p: 0.62, pdr: 90 },
+  { nome: 'Amiréia (ureia)', tipo: 'Concentrado', custo: 3.0, ms: 90.6, pb: 200, ndt: 22, ca: 0.12, p: 0.08, pdr: 90 },
+  { nome: 'Babaçu farelo', tipo: 'Concentrado', custo: 0.7, ms: 90, pb: 20.6, ndt: 71.9, ca: 0.13, p: 0.36, pdr: 4 },
+  { nome: 'Babaçu torta', tipo: 'Concentrado', custo: 1.2, ms: 90.8, pb: 19.3, ndt: 78, ca: 0.15, p: 0.69, pdr: 4 },
   { nome: 'Crambe farelo', tipo: 'Concentrado', custo: 0, ms: 89.1, pb: 35.9, ndt: 73.9, ca: 0.29, p: 0.47, pdr: 4 },
   { nome: 'Canola farelo', tipo: 'Concentrado', custo: 0, ms: 89.4, pb: 40.1, ndt: 83.4, ca: 0.62, p: 0.82, pdr: 4 },
   { nome: 'Colza farelo', tipo: 'Concentrado', custo: 0, ms: 91.2, pb: 40, ndt: 0, ca: 0.65, p: 1.34, pdr: 50 },
   { nome: 'Feijão moído', tipo: 'Concentrado', custo: 0, ms: 89.6, pb: 24.2, ndt: 80.8, ca: 0.54, p: 0.43, pdr: 3 },
   { nome: 'Girassol farelo', tipo: 'Concentrado', custo: 0, ms: 90.2, pb: 31.4, ndt: 71.1, ca: 0.3, p: 0.9, pdr: 4},
   { nome: 'Linhaça farelo', tipo: 'Concentrado', custo: 0, ms: 92, pb: 34, ndt: 0, ca: 0.6, p: 0.6, pdr: 4 },
-  { nome: 'Mamona farelo detoxificado', tipo: 'Concentrado', custo: 0, ms: 89.2, pb: 38.1, ndt: 69.3, ca: 1.46, p: 0.65, pdr: 3 },
-  { nome: 'Milho glúten 60', tipo: 'Concentrado', custo: 0, ms: 90.6, pb: 60, ndt: 83.9, ca: 0.05, p: 0.44, pdr: 3 },
-  { nome: 'Milho (DDGS)', tipo: 'Concentrado', custo: 0, ms: 91.2, pb: 31.8, ndt: 89, ca: 0.05, p: 0.86, pdr: 3 },
-  { nome: 'Resíduo de cervejaria', tipo: 'Concentrado', custo: 0.45, ms: 22.3, pb: 25.6, ndt: 92.2, ca: 0.33, p: 0.78, pdr: 4 },
-  { nome: 'Soja farelo', tipo: 'Concentrado', custo: 1.62, ms: 87, pb: 45, ndt: 73, ca: 0.3, p: 0.61, pdr: 4 },
-  { nome: 'Soja grão tostado', tipo: 'Concentrado', custo: 0, ms: 91.7, pb: 39.1, ndt: 94.2, ca: 0.25, p: 0.49, pdr: 40.2 },
+  { nome: 'Mamona farelo detoxificado', tipo: 'Concentrado', custo: 0.9, ms: 89.2, pb: 38.1, ndt: 69.3, ca: 1.46, p: 0.65, pdr: 3 },
+  { nome: 'Milho glúten 60', tipo: 'Concentrado', custo: 1, ms: 90.6, pb: 60, ndt: 83.9, ca: 0.05, p: 0.44, pdr: 3 },
+  { nome: 'Milho (DDGS)', tipo: 'Concentrado', custo: 2.4, ms: 91.2, pb: 31.8, ndt: 89, ca: 0.05, p: 0.86, pdr: 3 },
+  { nome: 'Resíduo de cervejaria', tipo: 'Concentrado', custo: 2.5, ms: 22.3, pb: 25.6, ndt: 92.2, ca: 0.33, p: 0.78, pdr: 4 },
+  { nome: 'Soja farelo', tipo: 'Concentrado', custo: 3.5, ms: 87, pb: 45, ndt: 73, ca: 0.3, p: 0.61, pdr: 4 },
+  { nome: 'Soja grão tostado', tipo: 'Concentrado', custo: 3.4, ms: 91.7, pb: 39.1, ndt: 94.2, ca: 0.25, p: 0.49, pdr: 40.2 },
 
 // Tabela 28 - Alimentos para ovinos (com PDR real ou estimado)
 
@@ -352,8 +357,8 @@ function calcularDieta() {
   mostrarSpinner(true);
 
   // Parâmetros para busca aleatória
-  const tentativas = 60000; // Aumente para mais precisão, diminua se ficar lento
-  const step = 0.5; // precisão em %, igual à anterior
+  const tentativas = 100000; // Aumente para mais precisão, diminua se ficar lento
+  const step = 0.1; // precisão em %, igual à anterior
 
   setTimeout(() => {
     let melhor = null;
@@ -430,7 +435,7 @@ function mostrarResultados(res, ingredientesUsar) {
   const sec = document.getElementById('resultado-section');
   const out = document.getElementById('resultados');
   if (!res) { sec.style.display='block'; out.innerHTML = '<p style="color:var(--danger)">Nenhum resultado.</p>'; desenharGrafico(null); return; }
-  let t = '<table class="result-table"><thead><tr><th>Ingrediente</th><th>Tipo</th><th>% na (MN)</th><th>% na (MS)</th></tr></thead><tbody>';
+  let t = '<table class="result-table"><thead><tr><th>Ingrediente</th><th>Tipo</th><th>Kg Matéria Natural</th><th>Kg Matéria Seca</th></tr></thead><tbody>';
   let totalNatural=0, totalMS=0;
   res.ingredientesUsar.forEach((ing,idx) => {
     let kgMS = res.props[idx];

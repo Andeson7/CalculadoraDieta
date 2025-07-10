@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OvinoCapriNutriApp</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="calculadora-ovinos-caprinos.css">
+</head>
+<body>
+  <!-- LOGO E TÍTULO -->
+  <nav class="navbar navbar-light bg-white shadow-sm rounded-bottom-4 mb-3">
+    <div class="container-fluid justify-content-center">
+      <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
+        <span class="logo-ovino-caprino align-middle">
+          <!-- SVG Logo flat e moderna -->
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+            <ellipse cx="13" cy="18" rx="11" ry="8" fill="#1eb85c"/>
+            <ellipse cx="22.5" cy="18" rx="8" ry="7" fill="#ffe8a3"/>
+            <ellipse cx="17" cy="11.5" rx="7" ry="5" fill="#f8f9fa" stroke="#157347" stroke-width="1.5"/>
+            <ellipse cx="13.5" cy="13.5" rx="1" ry="1.2" fill="#222"/>
+            <ellipse cx="20.5" cy="13.5" rx="1" ry="1.2" fill="#222"/>
+            <rect x="8" y="26" width="3" height="2" rx="1" fill="#1eb85c"/>
+            <rect x="22" y="26" width="3" height="2" rx="1" fill="#ffe066"/>
+            <ellipse cx="17" cy="14.5" rx="0.7" ry="0.7" fill="#bbb"/>
+          </svg>
+        </span>
+        <span style="font-weight:700;font-size:1.22em;letter-spacing:1px;color:#157347;">OvinoCapriNutriApp</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- ABAS -->
+  <ul class="nav nav-tabs mb-3 rounded-3 shadow-sm nav-custom" id="mainTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="nutri-tab" data-bs-toggle="tab" data-bs-target="#nutri-tab-pane" type="button" role="tab" aria-controls="nutri-tab-pane" aria-selected="true">
+        <i class="bi bi-calculator"></i> Nutrição
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="mais-tab" data-bs-toggle="tab" data-bs-target="#mais-tab-pane" type="button" role="tab" aria-controls="mais-tab-pane" aria-selected="false">
+        <i class="bi bi-list-task"></i> Mais Funções
+      </button>
+    </li>
+  </ul>
+
+      <div class="container pb-4">
+      <div class="card mb-3">
+        <div class="row g-2">
+          <div class="col-6 form-row-compact">
+            <label for="especie" class="form-label">Espécie</label>
+            <select id="especie" class="form-select" onchange="atualizarRacas();">
+              <option value="ovino">Ovino</option>
+              <option value="caprino">Caprino</option>
+            </select>
+          </div>
+          <div class="col-6 form-row-compact">
+            <label for="raca" class="form-label">Raça</label>
+            <select id="raca" class="form-select"></select>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-6 form-row-compact">
+            <label for="categoria" class="form-label">Categoria</label>
+            <select id="categoria" class="form-select" onchange="atualizarFases();">
+              <option value="naoCastrado">Macho Não Castrado</option>
+              <option value="castrado">Macho Castrado</option>
+              <option value="femea">Fêmea</option>
+              <option value="lactacao">Fêmea em Lactação</option>
+              <option value="gestante">Fêmea Gestante</option>
+            </select>
+          </div>
+          <div class="col-6 form-row-compact">
+            <label for="fase" class="form-label">Fase</label>
+            <select id="fase" class="form-select"></select>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-6 form-row-compact">
+            <label for="peso" class="form-label">Peso (kg)</label>
+            <input type="number" id="peso" value="30" min="5" max="120" step="0.1" class="form-control">
+          </div>
+          <div class="col-6 form-row-compact">
+            <label for="gmd" class="form-label">GMD (kg/dia)</label>
+            <input type="number" id="gmd" value="0.15" step="0.01" class="form-control">
+          </div>
+        </div>
+        <div class="row g-2 mt-2">
+          <div class="col-6 form-row-compact">
+            <label for="diasLactacao" id="labelDiasLactacao" class="form-label" style="display:none;">Dias Lact.</label>
+            <input type="number" id="diasLactacao" value="30" min="1" max="200" class="form-control" style="display:none;">
+          </div>
+          <div class="col-6 form-row-compact">
+            <label for="litrosLeite" id="labelLitrosLeite" class="form-label" style="display:none;">Leite (L/dia)</label>
+            <input type="number" id="litrosLeite" value="1.0" min="0" max="10" step="0.01" class="form-control" style="display:none;">
+          </div>
+        </div>
+        <button class="btn btn-brand w-100 shadow-sm" onclick="calcularRequerimentos()">
+          <i class="bi bi-calculator"></i> Calcular
+        </button>
+      </div>  
+        <!-- RESULTADOS -->
+        <div class="row g-2" id="resultados"></div>
+        <div class="referencia text-center text-secondary small mt-3">
+          <i class="bi bi-bookmark-heart"></i> Modelos matemáticos baseados em:<br>
+          BR-CAPRINOS E OVINOS (UFV, 2024)<br>
+          FORMULAÇÃO DE RAÇÃO PARA OVINOS (Embrapa/Universidades)
+        </div>
+      </div>
+    </div>
+    <!-- TAB 2: Mais Funções (placeholder) -->
+    <div class="tab-pane fade" id="mais-tab-pane" role="tabpanel" aria-labelledby="mais-tab" tabindex="0">
+      <div class="container p-4 text-center">
+        <i class="bi bi-tools fs-1 text-success mb-3"></i>
+        <h4 class="fw-bold" style="color:var(--brand-green-dark)">Em breve...</h4>
+        <p class="text-muted">Aqui ficarão outras funções úteis para a ovinocaprinocultura, como gestão sanitária, reprodução, controle de lotes, e muito mais!</p>
+      </div>
+    </div>
+  </div>
+
+  <main>
+         </section>
+       <section class="card">
+        <div class="container">
+          <h2>Estimar Requerimentos Nutricionais</h2>
+          <form id="form-ovinos" onsubmit="event.preventDefault(); calcular();">
+            <label for="categoriaCal">Categoria do animal:</label>
+            <select id="categoriaCal" name="categoria" required> <br>
+              <option value="cordeiro">Cordeiro (crescimento)</option>
+              <option value="borrego">Borrego</option>
+              <option value="ovelha">Ovelha adulta</option>
+              <option value="reprodutor">Reprodutor</option>
+              <option value="borregos reposição">Borregos reposição</option>
+              <option value="reprodutores-em-serviço">Reprodutores em serviço</option>
+              <option value="confinamento-de-ovinos">Confinamento de ovinos</option>
+            </select><br>
+
+            <label for="peso">Peso Vivo (PV, kg):</label> 
+            <input type="number" id="peso" name="peso" step="0.01" min="10" max="120" required> <br>
+
+            <label for="gmd">Ganho Médio Diário (GMD, g/dia):</label>
+            <input type="number" id="gmd" name="gmd" step="0.01" min="0" max="450"> <br>
+
+            <button type="submit">Calcular</button>
+          </form>
+          
+        </div><br>
+        <div id="resultadosCal" class=""></div>
+        
+        
+       </section>
+        
+        <section class="card" id="animal-section">
+        <h2>Informações dos Animais</h2>
+        <form id="animal-form">
+         <!-- <div class="form-row">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" required>
+              <option value="">Selecione</option>
+              <option value="Mantença">Mantença</option>
+              <option value="Flushing">Flushing</option>
+              <option value="Matriz Gestante">Matriz Gestante</option>
+              <option value="Matriz Gestantes últimas semanas">Matriz Gestante últimas semanas</option>
+              <option value="Lactação (uma cria)">Lactação (uma cria)</option>
+              <option value="Lactação (duas cria)">Lactação (duas cria)</option>
+              <option value="Creep-feeding para cordeiros">Creep-feeding para cordeiros</option>
+              <option value="Cordeiro Crescimento">Cordeiro Crescimento</option>
+              <option value="Cordeiro Terminação">Cordeiro Terminação</option>
+              <option value="Borrego/Borrega Reposição">Borrego/Borrega Reposição</option>
+              <option value="Reprodutores">Reprodutores</option>
+              <option value="Confinamento de ovinos">Confinamento de ovinos</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="pv-animal">Peso Vivo (PV, kg):</label>
+            <input type="number" id="pv-animal" min="0" max="120" step="any" required>
+          </div> -->
+          <div class="form-row">
+            <label for="ms-animal">Consumo de Matéria Seca (CMS, kg/animal/dia):</label>
+            <input type="number" id="ms-animal" min="0" step="any" required>
+          </div>
+         <!-- <div class="form-row">
+            <label for="gpd-animal">Ganho de Peso Diário (GPD, g/dia):</label>
+            <input type="number" id="gpd-animal" min="0" max="450" step="any" required>
+          </div> -->
+          <div class="form-row">
+            <label for="num-animais">Animais no rebanho:</label>
+            <input type="number" id="num-animais" min="1" value="1" required>
+          </div>
+        </form>
+      </section>
+    <section class="card" id="ingredientes-section">
+      <h2>Selecione os Ingredientes</h2>
+     <!--   <form id="ingrediente-form">
+       <div class="form-row"> 
+          <input type="text" id="nome" placeholder="Nome" required>
+          <select id="tipo" required>
+            <option value="">Tipo</option>
+            <option value="Volumoso">Volumoso</option>
+            <option value="Concentrado">Concentrado</option>
+          </select>
+          <input type="number" id="custo" placeholder="Custo (R$/kg)" min="0" step="0.01" required>
+          <input type="number" id="ms" placeholder="%MS" min="0" step="0.1" required>
+        </div>
+        <div class="form-row">
+          <input type="number" id="pb" placeholder="PB (%MS)" min="0" step="0.1" required>
+          <input type="number" id="ndt" placeholder="NDT (%MS)" min="0" max="100" step="0.1" required>
+          <input type="number" id="ca" placeholder="Ca (%MS)" min="0" max="100" step="0.01" required>
+          <input type="number" id="p" placeholder="P (%MS)" min="0" max="100" step="0.01" required>
+          <input type="number" id="pdr" placeholder="PDR (%PB)" min="0" step="0.1" required>
+          <button type="submit" class="add-btn">Adicionar</button>
+        </div> 
+      </form> -->
+      <button id="abrir-modal-btn" class="secondary" style="margin-top:0.7em;">Selecionar Ingredientes</button>
+      <table id="ingredientes-table">
+        <thead>
+          <tr>
+            <th>Nome</th><th>Tipo</th><th>Custo</th><th>%MS</th><th>PB</th><th>NDT</th><th>Ca</th><th>P</th><th>PDR</th><th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card" id="selecionar-section">
+      <h2>Ingredientes Selecionados e Limites Individuais</h2>
+      <form id="selecionar-form">
+        <div id="ingredientes-selecao-list"></div>
+      </form>
+    </section>
+
+    <section class="card" id="limites-section">
+      <h2>Limites da Dieta</h2>
+      <form id="limites-form">
+        <div class="grid-limites">
+          <div>
+            <label>PB (%MS):</label>
+            <input type="number" id="pb-min"  placeholder="mín" step="0.1" required>
+            <input type="number" id="pb-max"  placeholder="máx" step="0.1" required>
+          </div>
+          <div>
+            <label>NDT (%MS):</label>
+            <input type="number" id="ndt-min"  placeholder="mín" step="0.1" required>
+            <input type="number" id="ndt-max"  placeholder="máx" step="0.1" required>
+          </div>
+          <div>
+            <label>Ca (%MS):</label>
+            <input type="number" id="ca-min" placeholder="mín" step="0.01" required>
+            <input type="number" id="ca-max" placeholder="máx" step="0.01" required>
+          </div>
+          <div>
+            <label>P (%MS):</label>
+            <input type="number" id="p-min" placeholder="mín" step="0.01" required>
+            <input type="number" id="p-max" placeholder="máx" step="0.01" required>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card actions">
+      <button id="calcular-btn">Calcular Dieta</button>
+      <button id="limpar-btn" class="secondary">Limpar Campos</button>
+      <!--<button id="exportar-btn" class="secondary">Imprimir Relatório</button>
+      <button id="mistura-btn" class="secondary">Imprimir Mistura</button> -->
+    </section>
+
+    <section class="card" id="resultado-section" style="display:none;">
+      <h2>Resultados da Dieta</h2>
+      <div id="resultados"></div>
+      <canvas id="grafico" width="350" height="220"></canvas>
+      <button id="exportar-btn" class="secondary">Imprimir Relatório</button>
+      <button id="mistura-btn" class="secondary">Imprimir Mistura</button>
+    </section>
+
+    <style>
+      /* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+thead {
+  background-color: var(--verde-medio);
+  color: var(--branco);
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* calculadora MS cordeiros */
+.calculadora-container {
+  background: #fff;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 32px 24px 24px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
+.inputMS[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+.inputMS[type="number"]:focus {
+  border-color: #14532d;
+}
+
+.buttonMS {
+  width: 100%;
+  background-color: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+
+.resultadoMS {
+  margin-top: 24px;
+  font-size: 1.1rem;
+  color: #222;
+  font-weight:normal;
+  min-height: 24px;
+}
+
+    </style>
+
+ <!-- <section class="card"> 
+    <div class="table-responsive">
+      <h2>Tabela 1: Concentrações de nutrientes para rações de ovinos com base na % da MS</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Categoria</th>
+              <th>CMS (kg)</th>
+              <th>PB (%)</th>
+              <th>NDT (%)</th>
+              <th>EM (Mcal/kg)</th>
+              <th>Ca (g/kg)</th>
+              <th>P (g/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Mantença</td><td>1,2</td><td>9,5</td><td>55</td><td>2,0</td><td>0,4</td><td>0,2</td></tr>
+            <tr><td>Flushing</td><td>1,8</td><td>9</td><td>60</td><td>2,1</td><td>0,5</td><td>0,2</td></tr>
+            <tr><td>Gestantes (1ªs 15 semanas)</td><td>1,4</td><td>9,5</td><td>55</td><td>2,0</td><td>0,5</td><td>0,2</td></tr>
+            <tr><td>Gestantes últimas semanas (-40% CMS)</td><td>1,8</td><td>11</td><td>60</td><td>2,1</td><td>0,6</td><td>0,25</td></tr>
+            <tr><td>Gestantes últimas semanas (-60% CMS)</td><td>2,0</td><td>11,5</td><td>65</td><td>2,3</td><td>0,65</td><td>0,3</td></tr>
+            <tr><td>Início gestação (1 feto)</td><td>1,3</td><td>8</td><td>55</td><td>1,9</td><td>0,45</td><td>0,32</td></tr>
+            <tr><td>Final gestação (1 feto)</td><td>1,5</td><td>7</td><td>65</td><td>2,0</td><td>0,55</td><td>0,4</td></tr>
+            <tr><td>Início gestação (2 fetos)</td><td>1,5</td><td>8,5</td><td>55</td><td>1,9</td><td>0,4</td><td>0,28</td></tr>
+            <tr><td>Final gestação (2 fetos)</td><td>1,5</td><td>11</td><td>75</td><td>2,6</td><td>0,55</td><td>0,35</td></tr>
+            <tr><td>Lactação (1 cria)</td><td>2,5</td><td>13,5</td><td>65</td><td>2,3</td><td>0,65</td><td>0,3</td></tr>
+            <tr><td>Lactação (2 crias)</td><td>2,8</td><td>15</td><td>65</td><td>2,5</td><td>0,75</td><td>0,35</td></tr>
+            <tr><td>Creep-feeding cordeiros</td><td>0,6</td><td>26,5</td><td>80</td><td>2,9</td><td>0,95</td><td>0,4</td></tr>
+            <tr><td>Cordeiros crescimento (270 g/dia)</td><td>1,18</td><td>16,5</td><td>78</td><td>2,8</td><td>0,6</td><td>0,25</td></tr>
+            <tr><td>Cordeiros terminação (360 g/dia)</td><td>1,5</td><td>14,5</td><td>78</td><td>2,7</td><td>0,7</td><td>0,3</td></tr>
+            <tr><td>Cordeiros terminação (270 g/dia)</td><td>1,6</td><td>12</td><td>75</td><td>2,7</td><td>0,55</td><td>0,22</td></tr>
+            <tr><td>Borregas reposição</td><td>1,4</td><td>10</td><td>65</td><td>2,4</td><td>0,45</td><td>0,18</td></tr>
+            <tr><td>Borregos reposição</td><td>2,4</td><td>11</td><td>65</td><td>2,3</td><td>0,45</td><td>0,18</td></tr>
+            <tr><td>Reprodutores em serviço</td><td>3,0</td><td>10</td><td>65</td><td>2,3</td><td>0,4</td><td>0,15</td></tr>
+            <tr><td>Confinamento de ovinos</td><td>–</td><td>14</td><td>65</td><td>–</td><td>0,8%</td><td>0,4%</td></tr>
+          </tbody>
+          
+        </table>
+        
+        <p>Fonte: Adaptado de Belluzo et al. (2001), Borges & Gonçalves (2011) e NRC (2007).</p>
+        </div> -->
+
+        
+
+      <!--  <diV class="table-responsive">
+        <table>
+            <h2>Tabela 2: Estimativas do consumo diário de matéria seca em função do peso vivo e do ganho médio diário de peso de cordeiros.</h2>
+            <thead>
+              <tr>
+                <th>Peso vivo (kg)</th>
+                <th>GMD<sup>*</sup></th>
+                <th>CMS (kg/dia)<sup>**</sup></th>
+                <th>CMS (% PV)<sup>***</sup></th>
+              </tr>
+            </thead>
+            <tbody>
+               Peso vivo: 20 kg 
+              <tr><td rowspan="5">20</td><td>0,15</td><td>0,81</td><td>4,04</td></tr>
+              <tr><td>0,20</td><td>0,84</td><td>4,21</td></tr>
+              <tr><td>0,25</td><td>0,88</td><td>4,38</td></tr>
+              <tr><td>0,30</td><td>0,91</td><td>4,56</td></tr>
+              <tr><td>0,35</td><td>0,94</td><td>4,72</td></tr>
+
+               Peso vivo: 25 kg 
+              <tr><td rowspan="5">25</td><td>0,15</td><td>0,91</td><td>3,62</td></tr>
+              <tr><td>0,20</td><td>0,94</td><td>3,76</td></tr>
+              <tr><td>0,25</td><td>0,97</td><td>3,90</td></tr>
+              <tr><td>0,30</td><td>1,00</td><td>4,01</td></tr>
+              <tr><td>0,35</td><td>1,04</td><td>4,17</td></tr>
+
+               Peso vivo: 30 kg 
+              <tr><td rowspan="5">30</td><td>0,15</td><td>1,00</td><td>3,35</td></tr>
+              <tr><td>0,20</td><td>1,04</td><td>3,46</td></tr>
+              <tr><td>0,25</td><td>1,07</td><td>3,58</td></tr>
+              <tr><td>0,30</td><td>1,11</td><td>3,70</td></tr>
+              <tr><td>0,35</td><td>1,14</td><td>3,80</td></tr>
+
+               Peso vivo: 35 kg 
+              <tr><td rowspan="5">35</td><td>0,15</td><td>1,10</td><td>3,15</td></tr>
+              <tr><td>0,20</td><td>1,13</td><td>3,23</td></tr>
+              <tr><td>0,25</td><td>1,17</td><td>3,34</td></tr>
+              <tr><td>0,30</td><td>1,21</td><td>3,45</td></tr>
+              <tr><td>0,35</td><td>1,24</td><td>3,54</td></tr>
+            </tbody>
+          </table>
+          <p>Fonte: CABRAL, et al., 2008.</p>
+      </div> -->
+      
+
+        <!--<div class="calculadora-container">
+          <h2>Calcular Consumo de Matéria Seca (CMS) para Cordeiros</h2>
+          <form id="cms-form">
+            <label for="pv">Peso Vivo (PV) [kg]:</label>
+            <input class="inputMS" type="number" id="pv" name="pv" min="0" step="any" required><br>
+
+            <label for="gpd">Ganho de Peso Diário (GPD) [kg/dia]:</label>
+            <input class="inputMS" type="number" id="gpd" name="gpd" min="0" step="any" required>
+
+            <button type="button" class="buttonMS" id="calcular">Calcular</button>
+          </form>
+          <div class="resultadoMS" id="resultado"></div>
+        </div> <br> -->
+
+        
+     
+
+   <!-- <div class="table-responsive">
+
+         <table>
+            <h2>Tabela 3: Estimativas das exigências de diferentes formas de energia em função do peso vivo e do ganho médio diário de peso de cordeiros</h2>
+            <thead>
+              <tr>
+                <th>Peso vivo (kg)</th>
+                <th>GMD (kg)</th>
+                <th>ELm (kg)</th>
+                <th>ELg (kg)</th>
+                <th>EMm (kg)</th>
+                <th>EM (kg)</th>
+                <th>NDT </th>
+              </tr>
+            </thead>
+            <tbody>
+               Peso vivo: 20 kg 
+              <tr><td rowspan="5">20</td><td>0,15</td><td>0,54</td><td>0,43</td><td>0,82</td><td>1,03</td><td>0,51</td></tr>
+              <tr><td>0,20</td><td>0,54</td><td>0,58</td><td>0,82</td><td>1,38</td><td>0,61</td></tr>
+              <tr><td>0,25</td><td>0,54</td><td>0,72</td><td>0,82</td><td>1,72</td><td>0,70</td></tr>
+              <tr><td>0,30</td><td>0,54</td><td>0,87</td><td>0,82</td><td>2,07</td><td>0,80</td></tr>
+              <tr><td>0,35</td><td>0,54</td><td>1,01</td><td>0,82</td><td>2,41</td><td>0,89</td></tr>
+
+              Peso vivo: 25 kg 
+              <tr><td rowspan="5">25</td><td>0,15</td><td>0,64</td><td>0,47</td><td>0,97</td><td>1,11</td><td>0,57</td></tr>
+              <tr><td>0,20</td><td>0,64</td><td>0,62</td><td>0,97</td><td>1,48</td><td>0,68</td></tr>
+              <tr><td>0,25</td><td>0,64</td><td>0,78</td><td>0,97</td><td>1,85</td><td>0,78</td></tr>
+              <tr><td>0,30</td><td>0,64</td><td>0,93</td><td>0,97</td><td>2,22</td><td>0,88</td></tr>
+              <tr><td>0,35</td><td>0,64</td><td>1,09</td><td>0,97</td><td>2,59</td><td>0,98</td></tr>
+
+               Peso vivo: 30 kg 
+              <tr><td rowspan="5">30</td><td>0,15</td><td>0,73</td><td>0,50</td><td>1,11</td><td>1,19</td><td>0,63</td></tr>
+              <tr><td>0,20</td><td>0,73</td><td>0,66</td><td>1,11</td><td>1,58</td><td>0,74</td></tr>
+              <tr><td>0,25</td><td>0,73</td><td>0,83</td><td>1,11</td><td>1,98</td><td>0,85</td></tr>
+              <tr><td>0,30</td><td>0,73</td><td>1,00</td><td>1,11</td><td>2,37</td><td>0,96</td></tr>
+              <tr><td>0,35</td><td>0,73</td><td>1,16</td><td>1,11</td><td>2,77</td><td>1,07</td></tr>
+
+              Peso vivo: 35 kg 
+              <tr><td rowspan="5">35</td><td>0,15</td><td>0,82</td><td>0,53</td><td>1,24</td><td>1,26</td><td>0,69</td></tr>
+              <tr><td>0,20</td><td>0,82</td><td>0,71</td><td>1,24</td><td>1,68</td><td>0,81</td></tr>
+              <tr><td>0,25</td><td>0,82</td><td>0,88</td><td>1,24</td><td>2,10</td><td>0,93</td></tr>
+              <tr><td>0,30</td><td>0,82</td><td>1,06</td><td>1,24</td><td>2,53</td><td>1,04</td></tr>
+              <tr><td>0,35</td><td>0,82</td><td>1,24</td><td>1,24</td><td>2,95</td><td>1,16</td></tr>
+            </tbody>
+          </table>
+           <p>Fonte: CABRAL, et al., 2008.</p>
+      </div>
+
+      <div class="table-responsive">
+
+         <table>
+            <h2>Tabela 4: Estimativas das exigencias de diferentes formas de proteína em função do peso vivo e do ganho médio diário de peso de cordeiros</h2>
+            <thead>
+              <tr>
+                <th>Peso vivo (kg)</th>
+                <th>GMD</th>
+                <th>PMm (g)</th>
+                <th>PLg (g)</th>
+                <th>PB (g)</th>
+              </tr>
+            </thead>
+            <tbody>
+               Peso vivo: 20 kg 
+              <tr><td rowspan="5">20</td><td>0,15</td><td>37,83</td><td>27,30</td><td>99,99</td></tr>
+              <tr><td>0,20</td><td>37,83</td><td>36,39</td><td>118,3</td></tr>
+              <tr><td>0,25</td><td>37,83</td><td>45,49</td><td>136,7</td></tr>
+              <tr><td>0,30</td><td>37,83</td><td>54,59</td><td>155,0</td></tr>
+              <tr><td>0,35</td><td>37,83</td><td>63,69</td><td>173,4</td></tr>
+
+               Peso vivo: 25 kg 
+              <tr><td rowspan="5">25</td><td>0,15</td><td>44,72</td><td>27,10</td><td>107,5</td></tr>
+              <tr><td>0,20</td><td>44,72</td><td>36,13</td><td>125,6</td></tr>
+              <tr><td>0,25</td><td>44,72</td><td>45,16</td><td>143,8</td></tr>
+              <tr><td>0,30</td><td>44,72</td><td>54,20</td><td>162,0</td></tr>
+              <tr><td>0,35</td><td>44,72</td><td>63,23</td><td>180,1</td></tr>
+
+               Peso vivo: 30 kg 
+              <tr><td rowspan="5">30</td><td>0,15</td><td>51,27</td><td>26,91</td><td>114,7</td></tr>
+              <tr><td>0,20</td><td>51,27</td><td>35,88</td><td>132,6</td></tr>
+              <tr><td>0,25</td><td>51,27</td><td>44,85</td><td>150,6</td></tr>
+              <tr><td>0,30</td><td>51,27</td><td>53,82</td><td>168,5</td></tr>
+              <tr><td>0,35</td><td>51,27</td><td>62,79</td><td>186,5</td></tr>
+
+               Peso vivo: 35 kg 
+              <tr><td rowspan="5">35</td><td>0,15</td><td>57,56</td><td>26,73</td><td>121,5</td></tr>
+              <tr><td>0,20</td><td>57,56</td><td>35,64</td><td>139,3</td></tr>
+              <tr><td>0,25</td><td>57,56</td><td>44,55</td><td>157,0</td></tr>
+              <tr><td>0,30</td><td>57,56</td><td>53,46</td><td>174,8</td></tr>
+              <tr><td>0,35</td><td>57,56</td><td>62,37</td><td>192,6</td></tr>
+            </tbody>
+          </table>
+           <p>Fonte: CABRAL, et al., 2008.</p>
+      </div> 
+
+
+    </section>  -->
+  </main>
+
+  <!-- Modal de Ingredientes -->
+  <div id="modal-ingredientes" class="modal-bg">
+    <div class="modal-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="margin:0;">Selecionar e Editar Ingredientes</h2>
+        <button id="fechar-modal-btn" title="Fechar" style="font-size:1.5em;line-height:1;">×</button>
+      </div>
+      <form id="modal-ingredientes-form">
+        <div id="modal-ingredientes-list"></div>
+        <div style="text-align:right;margin-top:1em;">
+          <button type="submit" class="add-btn">Aplicar Seleção</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Spinner de carregamento -->
+  <div id="spinner-busca" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:#fff8fbe6;align-items:center;justify-content:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="loader"></div>
+      <span style="margin-top:1em;color:#2d9c72;font-weight:600;">Calculando melhor combinação...</span>
+    </div>
+  </div>
+  <!-- Bootstrap JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="calculadora-ovinos-caprinos.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+:root {
+  --brand-green: #1eb85c;
+  --brand-green-dark: #157347;
+  --brand-green-light: #e7f9ee;
+  --brand-green-very-light: #f5fcf8;
+  --brand-green-gradient: linear-gradient(90deg, #1eb85c 0%, #157347 100%);
+  --brand-text: #173c28;
+  --brand-gray: #e6f2e6;
+  --brand-gold: #ffe066;
+  --brand-blue: #2f6476;
+}
+
+body {
+  background: var(--brand-green-light);
+  min-height: 100vh;
+}
+
+.navbar {
+  border-radius: 0 0 1.2rem 1.2rem;
+  background: #fff !important;
+  border-bottom: 3px solid var(--brand-green);
+}
+
+.logo-ovino-caprino svg {
+  vertical-align: middle;
+}
+
+.nav-tabs.nav-custom .nav-link.active {
+  background: var(--brand-green) !important;
+  color: #fff !important;
+  font-weight: bold;
+  border-top-left-radius: 1.1rem;
+  border-top-right-radius: 1.1rem;
+  border-color: var(--brand-green) var(--brand-green) #fff !important;
+}
+.nav-tabs.nav-custom .nav-link {
+  color: var(--brand-green-dark);
+  font-weight: 500;
+  background: #fff;
+  border: none;
+  letter-spacing: 0.5px;
+}
+
+.card {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  padding: 0 !important;
+}
+
+label {
+  font-weight: 600;
+  color: var(--brand-green-dark);
+  font-size: 1.05em;
+  margin-bottom: 0.2em;
+}
+
+.form-select, .form-control {
+  border: none;
+  border-bottom: 2px solid var(--brand-green);
+  border-radius: 0;
+  background: transparent !important;
+  font-size: 1.08em;
+  color: var(--brand-text);
+  margin-bottom: 0.7em;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+  outline: none;
+  min-height: 2.2rem;
+}
+
+.form-select {
+  width: auto;
+  min-width: 130px;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.form-select:focus, .form-control:focus {
+  border-bottom: 3px solid var(--brand-green-dark);
+  outline: none;
+  box-shadow: none;
+  background: transparent !important;
+}
+
+.btn-brand {
+  background: var(--brand-green-gradient);
+  border: none;
+  color: #fff;
+  font-size: 1.04em;
+  font-weight: 600;
+  letter-spacing: .5px;
+  border-radius: 0.7em;
+  margin-top: 1.2em;
+  padding: 0.7em 0;
+  transition: background 0.15s;
+}
+.btn-brand:hover, .btn-brand:active {
+  background: linear-gradient(90deg, #157347 0%, #1eb85c 100%);
+  color: #fff;
+}
+
+.result-card {
+  border-radius: 0.7rem;
+  box-shadow: 0 2px 8px #e0f6e7;
+  font-size: 1em;
+  padding: 0.8em 1em;
+  color: var(--brand-green-dark);
+  background: #fff;
+  border-left: 5px solid var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  min-height: 65px;
+  margin-bottom: 0.7em;
+}
+.result-card .result-icon {
+  font-size: 2em;
+  margin-right: 0.7em;
+  color: var(--brand-green);
+}
+.result-card strong { color: var(--brand-green-dark); }
+.result-card small { color: #888; }
+
+.result-card.bg-recomendacao {
+  background: var(--brand-green-very-light);
+  border-left: 5px solid var(--brand-gold);
+}
+
+@media (max-width: 576px) {
+  .navbar-brand { font-size: 1.05rem !important;}
+  .container { padding: 0.2rem !important; }
+  .card { padding: 0 !important; }
+  .result-card { font-size: .95rem; padding: .6em .5em; }
+  label { font-size: .99em;}
+}
+
+input, select { font-size: 1rem !important; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* Labels compactos, organizados ao lado do input em telas médias/grandes */
+@media (min-width: 576px) {
+  .form-row-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.4em;
+  }
+  .form-row-compact label {
+    min-width: 120px;
+    margin-bottom: 0;
+    text-align: right;
+    padding-right: 0.5em;
+    font-size: 1em;
+    white-space: nowrap;
+  }
+  .form-row-compact .form-select,
+  .form-row-compact .form-control {
+    flex: 1 1 auto;
+    min-width: 90px;
+    margin-bottom: 0;
+  }
+}
+/* Labels em cima (estilo mobile) para telas pequenas */
+@media (max-width: 575.98px) {
+  .form-row-compact {
+    display: block;
+    margin-bottom: 0.6em;
+  }
+  .form-row-compact label {
+    display: block;
+    min-width: 0;
+    margin-bottom: 0.15em;
+    text-align: left;
+    font-size: .99em;
+    padding-right: 0;
+  }
+  .form-row-compact .form-select,
+  .form-row-compact .form-control {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* Ajustes visuais gerais */
+label {
+  font-weight: 600;
+  color: var(--brand-green-dark);
+  margin-bottom: 0.1em;
+}
+
+.form-select,
+.form-control {
+  border: none;
+  border-bottom: 2px solid var(--brand-green);
+  border-radius: 0;
+  background: transparent !important;
+  font-size: 1.08em;
+  color: var(--brand-text);
+  box-shadow: none;
+  outline: none;
+  min-height: 2.2rem;
+  width: auto;
+  max-width: 100%;
+  display: inline-block;
+  margin-bottom: 0.3em;
+}
+
+.form-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 0.2em;
+}
+.form-row-compact label {
+  min-width: 85px;
+  margin-bottom: 0;
+  text-align: right;
+  font-size: 1em;
+  white-space: nowrap;
+  padding-right: 0.4em;
+}
+.form-row-compact .form-select,
+.form-row-compact .form-control {
+  flex: 1 1 auto;
+  min-width: 70px;
+  margin-bottom: 0;
+  width: auto;
+  max-width: 100%;
+  display: inline-block;
+}
+
+@media (max-width: 575.98px) {
+  .form-row-compact {
+    display: block;
+    margin-bottom: 0.5em;
+  }
+  .form-row-compact label {
+    display: block;
+    min-width: 0;
+    margin-bottom: 0.1em;
+    text-align: left;
+    font-size: .99em;
+    padding-right: 0;
+  }
+  .form-row-compact .form-select,
+  .form-row-compact .form-control {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+}

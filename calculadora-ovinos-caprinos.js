@@ -482,6 +482,121 @@ function calcularRequerimentos() {
   document.getElementById('resultados').scrollIntoView({behavior:"smooth"});
 }
 
+
+document.addEventListener("DOMContentLoaded", function() {
+  // ... seu código de inicialização ...
+
+  function getNutrientesPercentuais() {
+    let pbPct = null, ndtPct = null, caPct = null, pPct = null;
+    // Procura percentuais diretamente nos cards de resultado
+    document.querySelectorAll('#resultados .result-card').forEach(card => {
+      const html = card.innerHTML;
+      // PB
+      let m = html.match(/Prote[ií]na Bruta.*?\(([\d\.,]+)% da MS\)/i);
+      if (m) pbPct = parseFloat(m[1].replace(",", "."));
+      // NDT
+      m = html.match(/NDT:.*?\(([\d\.,]+)% da MS\)/i);
+      if (m) ndtPct = parseFloat(m[1].replace(",", "."));
+      // Ca
+      m = html.match(/C[áa]lcio.*?\(([\d\.,]+)% da MS\)/i);
+      if (m) caPct = parseFloat(m[1].replace(",", "."));
+      // P
+      m = html.match(/F[óo]sforo.*?\(([\d\.,]+)% da MS\)/i);
+      if (m) pPct = parseFloat(m[1].replace(",", "."));
+    });
+    // Se não achou, tenta na tabela cordeiros (usando última linha com %)
+    if (!pbPct || !ndtPct || !caPct || !pPct) {
+      let trs = document.querySelectorAll('#resultados table.result-table tr');
+      trs.forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length === 3) {
+          const key = tds[0].textContent.toLowerCase();
+          const val = tds[1].textContent.replace(",", ".");
+          if (/prote[ií]na bruta/.test(key) && val.includes("%")) pbPct = parseFloat(val);
+          if (/ndt/.test(key) && val.includes("%")) ndtPct = parseFloat(val);
+          if (/c[áa]lcio/.test(key) && val.includes("%")) caPct = parseFloat(val);
+          if (/f[óo]sforo/.test(key) && val.includes("%")) pPct = parseFloat(val);
+        }
+      });
+    }
+    // Como fallback: se só achou g/dia e tem CMS, converte
+    let msAnimal = document.getElementById('ms-animal');
+    let cmsKg = msAnimal ? parseFloat(msAnimal.value.replace(",", ".")) : null;
+    if (cmsKg) {
+      // PB
+      if ((!pbPct || isNaN(pbPct)) && document.querySelector('#resultados .result-card')) {
+        let m = document.querySelector('#resultados .result-card').innerHTML.match(/Prote[ií]na Bruta.*?([\d\.,]+)\s*g\/dia/i);
+        if (m) pbPct = (parseFloat(m[1].replace(",", ".")) / (cmsKg*1000)) * 100;
+      }
+      // NDT
+      if ((!ndtPct || isNaN(ndtPct)) && document.querySelector('#resultados .result-card')) {
+        let m = document.querySelector('#resultados .result-card').innerHTML.match(/NDT:.*?([\d\.,]+)\s*g\/dia/i);
+        if (m) ndtPct = (parseFloat(m[1].replace(",", ".")) / (cmsKg*1000)) * 100;
+      }
+      // Ca
+      if ((!caPct || isNaN(caPct)) && document.querySelector('#resultados .result-card')) {
+        let m = document.querySelector('#resultados .result-card').innerHTML.match(/C[áa]lcio.*?([\d\.,]+)\s*g\/dia/i);
+        if (m) caPct = (parseFloat(m[1].replace(",", ".")) / (cmsKg*1000)) * 100;
+      }
+      // P
+      if ((!pPct || isNaN(pPct)) && document.querySelector('#resultados .result-card')) {
+        let m = document.querySelector('#resultados .result-card').innerHTML.match(/F[óo]sforo.*?([\d\.,]+)\s*g\/dia/i);
+        if (m) pPct = (parseFloat(m[1].replace(",", ".")) / (cmsKg*1000)) * 100;
+      }
+    }
+    return {
+      pb: pbPct ? pbPct.toFixed(1) : "",
+      ndt: ndtPct ? ndtPct.toFixed(1) : "",
+      ca: caPct ? caPct.toFixed(1) : "",
+      p: pPct ? pPct.toFixed(1) : ""
+    };
+  }
+
+  // Evento correto do Bootstrap 5 ao mostrar aba
+  document.querySelector('button#dieta-tab').addEventListener('shown.bs.tab', function (e) {
+    // Checa se cálculo já foi feito
+    let resultados = document.getElementById('resultados');
+    if (!resultados || resultados.innerHTML.trim() === '') {
+      alert('Por favor, calcule primeiro os requisitos nutricionais do animal na primeira aba antes de calcular a dieta!');
+      // Volta automaticamente para aba requisitos
+      document.querySelector('button#requisitos-tab').click();
+      return false;
+    }
+    // Preenche limites mínimos com valores dos cálculos
+    const nutrs = getNutrientesPercentuais();
+    let pbMin = document.getElementById('pb-min');
+    let ndtMin = document.getElementById('ndt-min');
+    let caMin = document.getElementById('ca-min');
+    let pMin = document.getElementById('p-min');
+    if (pbMin && nutrs.pb) { pbMin.value = nutrs.pb; pbMin.style.background="#e7f9ee"; }
+    if (ndtMin && nutrs.ndt) { ndtMin.value = nutrs.ndt; ndtMin.style.background="#e7f9ee"; }
+    if (caMin && nutrs.ca) { caMin.value = nutrs.ca; caMin.style.background="#e7f9ee"; }
+    if (pMin && nutrs.p) { pMin.value = nutrs.p; pMin.style.background="#e7f9ee"; }
+    // Os campos seguem editáveis
+  });
+
+  // Também sincroniza logo após cálculo dos requisitos (caso o usuário já esteja na aba dieta)
+  let btnCalcReq = document.querySelector('button[onclick*="calcularRequerimentos"]');
+  if (btnCalcReq) {
+    btnCalcReq.addEventListener('click', function() {
+      setTimeout(() => {
+        if(document.querySelector('button#dieta-tab').classList.contains('active')) {
+          const nutrs = getNutrientesPercentuais();
+          let pbMin = document.getElementById('pb-min');
+          let ndtMin = document.getElementById('ndt-min');
+          let caMin = document.getElementById('ca-min');
+          let pMin = document.getElementById('p-min');
+          if (pbMin && nutrs.pb) { pbMin.value = nutrs.pb; pbMin.style.background="#e7f9ee"; }
+          if (ndtMin && nutrs.ndt) { ndtMin.value = nutrs.ndt; ndtMin.style.background="#e7f9ee"; }
+          if (caMin && nutrs.ca) { caMin.value = nutrs.ca; caMin.style.background="#e7f9ee"; }
+          if (pMin && nutrs.p) { pMin.value = nutrs.p; pMin.style.background="#e7f9ee"; }
+        }
+      }, 300);
+    });
+  }
+});
+// ... o restante do seu código continua igual ...
+
 // --- Ingredientes padrão (20 exemplos, valores fictícios didáticos) ---
 const INGREDIENTES_PADRAO = [
   {nome:'Feno de Tifton', tipo:'Volumoso', custo:1.2, ms:87, pb:10, ndt:55, ca:0.45, p:0.25, pdr:7},
@@ -917,9 +1032,31 @@ function calcularDieta() {
 
 function mostrarResultados(res, ingredientesUsar) {
   const sec = document.getElementById('resultado-section');
-  const out = document.getElementById('resultados');
-  if (!res) { sec.style.display='block'; out.innerHTML = '<p style="color:var(--danger)">Nenhum resultado.</p>'; desenharGrafico(null); return; }
-  let t = '<table class="result-table"><thead><tr><th>Ingrediente</th><th>Tipo</th><th>Kg Matéria Natural</th><th>Kg Matéria Seca</th></tr></thead><tbody>';
+  const out = document.getElementById('resultados-formulacao');
+  const exportBtns = document.getElementById('botoes-exportar');
+  if (!out) return;
+
+  if (!res) {
+    sec.style.display='block';
+    out.innerHTML = '<p style="color:var(--danger)">Nenhum resultado.</p>';
+    desenharGrafico(null);
+    if (exportBtns) exportBtns.style.display = 'none';
+    return;
+  }
+
+  // Tabela de proporções dos ingredientes
+  let t = `<h3 class="mb-2">Tabela de Ingredientes e Proporções da Mistura</h3>
+  <table class="result-table mb-3">
+    <thead>
+      <tr>
+        <th>Ingrediente</th>
+        <th>Tipo</th>
+        <th>Kg Matéria Natural</th>
+        
+        <th>Proporção (%MS)</th>
+      </tr>
+    </thead>
+    <tbody>`;
   let totalNatural=0, totalMS=0;
   res.ingredientesUsar.forEach((ing,idx) => {
     let kgMS = res.props[idx];
@@ -928,14 +1065,21 @@ function mostrarResultados(res, ingredientesUsar) {
       <td>${ing.nome}</td>
       <td>${ing.tipo}</td>
       <td>${(kgNatural*100).toFixed(2)}</td>
-      <td>${(kgMS*100).toFixed(2)}</td>
+      
+      <td>${(kgMS*100).toFixed(2)}%</td>
     </tr>`;
     totalNatural += kgNatural;
     totalMS += kgMS;
   });
-  t += `<tr style="font-weight:bold;"><td colspan="2">Total</td><td>${(totalNatural*100).toFixed(2)}</td><td>${(totalMS*100).toFixed(2)}</td></tr>`;
+  t += `<tr style="font-weight:bold;">
+    <td colspan="2">Total</td>
+    <td>${(totalNatural*100).toFixed(2)}</td>
+   
+    <td>100%</td>
+  </tr>`;
   t += '</tbody></table>';
 
+  // Nutrientes/resumo logo abaixo da tabela
   t += `<h3>Resumo Nutricional</h3>
   <ul>
     <li><strong>PB:</strong> ${res.totalPB.toFixed(2)} %MS</li>
@@ -946,12 +1090,82 @@ function mostrarResultados(res, ingredientesUsar) {
     <li><strong>Relação Ca/P:</strong> ${(res.totalCa/res.totalP).toFixed(2)}</li>
     <li><strong>Relação Concentrado/Volumoso:</strong> ${((res.concMS/res.totalMS)*100).toFixed(1)}% / ${((res.volMS/res.totalMS)*100).toFixed(1)}%</li>
     <li><strong>Custo por Kg:</strong> R$ ${res.custo.toFixed(2)} por dia</li>
-  </ul>
-  `;
-  out.innerHTML = t;
+  </ul>`;
+
+  // Exibe gráfico após a tabela+resumo
+  out.innerHTML = t + `
+    <div class="w-100 mt-3">
+      <div class="d-flex flex-column align-items-center">
+        <canvas id="grafico" width="350" height="220"></canvas>
+      </div>
+    </div>`;
+
   sec.style.display = 'block';
   desenharGrafico(res);
+
+  // Exibe botões de exportação
+  if (exportBtns) exportBtns.style.display = 'flex';
 }
+
+// --- Ajuste: inicialização e limparTudo limpam apenas a parte correta ---
+function limparTudo() {
+  if (!confirm('Deseja limpar todos os dados e resultados?')) return;
+  ingredientes = INGREDIENTES_PADRAO.map(x=>({...x}));
+  ingredientesSelecionados = [];
+  limitesIngrSelecionados = [];
+  atualizarTabelaIngredientes();
+  document.getElementById('resultado-section').style.display='none';
+  // Limpar apenas resultados da formulação:
+  let out = document.getElementById('resultados-formulacao');
+  if (out) out.innerHTML = '';
+  atualizarSelecaoIngredientes();
+  // Oculta botões de exportação
+  const exportBtns = document.getElementById('botoes-exportar');
+  if (exportBtns) exportBtns.style.display = 'none';
+}
+
+// --- Inicialização: oculta botões de exportação e limpa resultados formulação ---
+document.addEventListener("DOMContentLoaded", function() {
+  atualizarRacas();
+  atualizarTabelaIngredientes();
+  preencherLimitesUI();
+  const exportBtns = document.getElementById('botoes-exportar');
+  if (exportBtns) exportBtns.style.display = 'none';
+  let out = document.getElementById('resultados-formulacao');
+  if (out) out.innerHTML = '';
+});
+
+// --- Ajuste ícones cálcio e fósforo para ícones melhores (exemplo: Ca = cubo/químico, P = elixir/gota) ---
+const icons = {
+  // ... outros ícones ...
+  ca: '<i class="bi bi-cube text-primary"></i>',      // melhor ícone para Cálcio
+  p: '<i class="bi bi-droplet-half text-info"></i>',  // melhor ícone para Fósforo
+  // ... outros ícones ...
+};
+
+
+// --- Oculta botões de exportação ao limpar tudo ---
+function limparTudo() {
+  if (!confirm('Deseja limpar todos os dados e resultados?')) return;
+  ingredientes = INGREDIENTES_PADRAO.map(x=>({...x}));
+  ingredientesSelecionados = [];
+  limitesIngrSelecionados = [];
+  atualizarTabelaIngredientes();
+  document.getElementById('resultado-section').style.display='none';
+  atualizarSelecaoIngredientes();
+  // Oculta botões de exportação
+  const exportBtns = document.getElementById('botoes-exportar');
+  if (exportBtns) exportBtns.style.display = 'none';
+}
+
+// --- Inicialização: oculta botões de exportação ---
+document.addEventListener("DOMContentLoaded", function() {
+  atualizarRacas();
+  atualizarTabelaIngredientes();
+  preencherLimitesUI();
+  const exportBtns = document.getElementById('botoes-exportar');
+  if (exportBtns) exportBtns.style.display = 'none';
+});
 
 // ---- Limpar ----
 function limparTudo() {
